@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<header class="hero">
+  <div>
+    <h1>{{ page.title }}</h1>
+    {% if page.subtitle %}
+      <p class="lead">{{ page.subtitle }}</p>
+    {% endif %}
+    <p class="role-location">{{ page.date | date: "%b %d, %Y" }}</p>
+  </div>
+</header>
+
+<section class="panel">
+  {{ content }}
+</section>

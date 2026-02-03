@@ -1,0 +1,21 @@
+title: "Abhinav Rajput"
+description: "Engineering lead focused on backend systems, architecture, and AI-era products."
+url: "https://abhinav85.github.io"
+baseurl: ""
+markdown: kramdown
+permalink: /blog/:title/
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
