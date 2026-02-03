@@ -245,12 +245,37 @@ li + li {
 }
 
 @media (max-width: 720px) {
+  .page {
+    padding: 40px 18px 64px;
+  }
+
   .panel {
     padding: 24px;
   }
 
   .cta {
     width: 100%;
+    text-align: center;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .nav-left {
+    width: 100%;
+  }
+
+  .nav-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .nav-cta {
+    flex: 1;
     text-align: center;
   }
 }
