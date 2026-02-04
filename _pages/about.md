@@ -15,20 +15,20 @@ description: "About Abhinav Rajput — engineering story, experience, and educat
   </div>
   <ul class="simple-list">
     <li>
-      <strong>CSM.ai</strong> — Senior Software Developer (Remote, Sep 2023 - Jan 2026).
-      Joined as the only backend developer; scaled to 300K users and saw the journey
-      through to acquisition by DeepMind.
+      <strong>CSM.ai</strong> — Lead Backend Developer (Remote, Nov 2024 - Jan 2026).
+      Led backend hardening and scale-up, built dynamic workflow architecture, and
+      supported the acquisition by Google DeepMind.
     </li>
     <li>
-      <strong>Unscript.ai</strong> — Senior Software Developer (Dec 2022 - Aug 2023).
+      <strong>Unscript.ai</strong> — Senior Backend Developer (Nov 2023 - Nov 2024).
       Led full-stack delivery on serverless, real-time tracking, and Shopify platforms.
     </li>
     <li>
-      <strong>Unibuddy</strong> — SDE-2 (Aug 2021 - Dec 2022).
+      <strong>Unibuddy</strong> — Senior Backend Developer (Aug 2021 - Nov 2023).
       Built Fargate + Kafka services and migrated millions of users safely.
     </li>
     <li>
-      <strong>HaikuJAM</strong> — Software Developer (Jul 2019 - Aug 2021).
+      <strong>HaikuJAM</strong> — Backend Developer (Jul 2019 - Aug 2021).
       Shipped B2C growth features and an AI creativity product.
     </li>
   </ul>
