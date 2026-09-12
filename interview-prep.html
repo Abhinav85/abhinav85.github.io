@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backend Engineer Interview Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Variables & Theming ===== */
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #1c2333;
+  --bg-card: #1a1f2e;
+  --bg-card-hover: #1e2538;
+  --bg-code: #2d333b;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent-red: #e94560;
+  --accent-red-dim: rgba(233,69,96,0.15);
+  --accent-blue: #58a6ff;
+  --accent-blue-dim: rgba(88,166,255,0.12);
+  --accent-green: #3fb950;
+  --accent-green-dim: rgba(63,185,80,0.12);
+  --accent-purple: #bc8cff;
+  --accent-yellow: #d29922;
+  --border-color: #30363d;
+  --border-subtle: #21262d;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --nav-height: 56px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-tertiary: #eef1f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --bg-code: #eff1f5;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --accent-red: #dc2626;
+  --accent-red-dim: rgba(220,38,38,0.08);
+  --accent-blue: #2563eb;
+  --accent-blue-dim: rgba(37,99,235,0.08);
+  --accent-green: #16a34a;
+  --accent-green-dim: rgba(22,163,74,0.08);
+  --accent-purple: #7c3aed;
+  --accent-yellow: #ca8a04;
+  --border-color: #d1d5db;
+  --border-subtle: #e5e7eb;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height) + 16px); }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  font-size: 15px;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== Top Navigation ===== */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-height);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  transition: background var(--transition), border-color var(--transition);
+}
+.nav-brand {
+  font-weight: 700; font-size: 16px;
+  color: var(--text-primary);
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-brand .logo {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-blue));
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff; font-weight: 800;
+}
+.nav-controls { display: flex; align-items: center; gap: 12px; }
+.nav-stats {
+  font-size: 12px; color: var(--text-muted);
+  display: none;
+}
+@media (min-width: 768px) { .nav-stats { display: block; } }
+.theme-toggle {
+  background: var(--bg-tertiary); border: 1px solid var(--border-color);
+  color: var(--text-primary); border-radius: 8px;
+  width: 38px; height: 38px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; transition: all var(--transition);
+}
+.theme-toggle:hover { border-color: var(--accent-blue); background: var(--accent-blue-dim); }
+.progress-bar {
+  position: absolute; bottom: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-blue));
+  transition: width 0.15s ease-out; width: 0%;
+}
+
+/* ===== Hero Header ===== */
+.hero {
+  margin-top: var(--nav-height);
+  padding: 48px 24px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .subtitle {
+  color: var(--text-secondary); font-size: 16px;
+  max-width: 520px; margin: 0 auto 24px;
+}
+.hero-meta {
+  display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-muted);
+}
+.hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+/* ===== Search ===== */
+.search-container {
+  max-width: 520px; margin: 0 auto; position: relative;
+}
+.search-input {
+  width: 100%; padding: 12px 16px 12px 42px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-color);
+  border-radius: var(--radius); color: var(--text-primary);
+  font-family: var(--font-sans); font-size: 14px;
+  outline: none; transition: all var(--transition);
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-dim); }
+.search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); font-size: 16px; pointer-events: none;
+}
+.search-clear {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 16px; display: none;
+  padding: 4px;
+}
+.search-clear.visible { display: block; }
+
+/* ===== Toolbar ===== */
+.toolbar {
+  max-width: 900px; margin: 16px auto 0; padding: 0 24px;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+}
+.toolbar-btn {
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all var(--transition);
+  background: var(--bg-tertiary); color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+.toolbar-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.toolbar-btn.active { background: var(--accent-blue-dim); color: var(--accent-blue); border-color: var(--accent-blue); }
+
+/* ===== Table of Contents ===== */
+.toc-wrapper {
+  max-width: 900px; margin: 28px auto 0; padding: 0 24px;
+}
+.toc-toggle {
+  width: 100%; padding: 14px 18px;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius); color: var(--text-primary);
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+  transition: all var(--transition);
+}
+.toc-toggle:hover { border-color: var(--accent-blue); }
+.toc-toggle .chevron { transition: transform var(--transition); font-size: 12px; }
+.toc-toggle.open .chevron { transform: rotate(180deg); }
+.toc-grid {
+  display: none; padding: 16px 18px;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-top: none; border-radius: 0 0 var(--radius) var(--radius);
+}
+.toc-grid.open { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 4px; }
+.toc-link {
+  padding: 6px 10px; border-radius: var(--radius-sm);
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 13px; transition: all var(--transition);
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.toc-num {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  min-width: 22px; text-align: right;
+}
+
+/* ===== Main Content ===== */
+.content { max-width: 900px; margin: 24px auto; padding: 0 24px 80px; }
+
+/* ===== Category Labels ===== */
+.category-label {
+  display: flex; align-items: center; gap: 10px;
+  margin: 36px 0 16px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.category-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border-subtle);
+}
+
+/* ===== Accordion Sections ===== */
+.accordion {
+  margin-bottom: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  transition: all var(--transition);
+  overflow: hidden;
+}
+.accordion:hover { border-color: color-mix(in srgb, var(--border-color) 60%, var(--accent-blue) 40%); }
+.accordion.open { box-shadow: var(--shadow); }
+.accordion.hidden-by-search { display: none; }
+
+.accordion-header {
+  width: 100%; padding: 16px 20px;
+  background: none; border: none; color: var(--text-primary);
+  font-family: var(--font-sans); font-size: 15px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 14px;
+  text-align: left; transition: background var(--transition);
+}
+.accordion-header:hover { background: var(--bg-card-hover); }
+.section-number {
+  font-size: 12px; font-weight: 700;
+  color: var(--accent-red);
+  background: var(--accent-red-dim);
+  padding: 2px 8px; border-radius: 4px;
+  flex-shrink: 0; font-family: var(--font-mono);
+}
+.accordion-title { flex: 1; }
+.accordion-tag {
+  font-size: 11px; font-weight: 500; padding: 2px 8px;
+  border-radius: 4px; flex-shrink: 0;
+}
+.tag-lang { background: var(--accent-blue-dim); color: var(--accent-blue); }
+.tag-arch { background: var(--accent-green-dim); color: var(--accent-green); }
+.tag-cloud { background: rgba(188,140,255,0.12); color: var(--accent-purple); }
+.tag-db { background: rgba(210,153,34,0.12); color: var(--accent-yellow); }
+.tag-infra { background: rgba(233,69,96,0.12); color: var(--accent-red); }
+.tag-ai { background: rgba(63,185,80,0.12); color: var(--accent-green); }
+.tag-pay { background: rgba(188,140,255,0.12); color: var(--accent-purple); }
+
+.accordion-chevron {
+  font-size: 12px; color: var(--text-muted);
+  transition: transform var(--transition); flex-shrink: 0;
+}
+.accordion.open .accordion-chevron { transform: rotate(180deg); }
+
+.accordion-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.accordion.open .accordion-body { max-height: 12000px; }
+.accordion-content { padding: 0 20px 20px; }
+
+/* ===== Content Styling ===== */
+.section-intro {
+  color: var(--text-secondary); font-size: 14px;
+  margin-bottom: 18px; line-height: 1.7;
+  border-left: 3px solid var(--accent-blue);
+  padding-left: 14px;
+}
+h3.sub-heading {
+  font-size: 14px; font-weight: 700;
+  color: var(--accent-blue); margin: 22px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+h3.sub-heading::before {
+  content: ''; width: 3px; height: 14px;
+  background: var(--accent-blue); border-radius: 2px;
+}
+
+.concept-list { list-style: none; padding: 0; }
+.concept-list li {
+  padding: 6px 0 6px 20px; position: relative;
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.7;
+}
+.concept-list li::before {
+  content: '\25B8'; position: absolute; left: 0;
+  color: var(--accent-red); font-size: 12px; top: 8px;
+}
+.concept-list li strong { color: var(--text-primary); font-weight: 600; }
+
+code {
+  font-family: var(--font-mono); font-size: 0.88em;
+  background: var(--bg-code); padding: 2px 6px;
+  border-radius: 4px; color: var(--accent-blue);
+  word-break: break-word;
+}
+pre {
+  background: var(--bg-code); border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+  overflow-x: auto; font-family: var(--font-mono);
+  font-size: 13px; line-height: 1.6; margin: 10px 0;
+  color: var(--text-primary);
+}
+
+/* ===== Q&A Blocks ===== */
+.qa-block {
+  margin: 10px 0; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+.qa-question {
+  padding: 10px 14px; font-size: 14px; font-weight: 600;
+  color: var(--text-primary);
+  background: var(--accent-blue-dim);
+  border-left: 3px solid var(--accent-blue);
+}
+.qa-answer {
+  padding: 10px 14px; font-size: 14px;
+  color: var(--text-secondary); line-height: 1.7;
+  border-left: 3px solid transparent;
+}
+.qa-answer code { font-size: 0.86em; }
+
+/* ===== Tables ===== */
+.table-wrapper { overflow-x: auto; margin: 10px 0; }
+table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+th {
+  text-align: left; padding: 10px 12px;
+  background: var(--bg-tertiary); color: var(--text-primary);
+  font-weight: 600; border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+tr:hover td { background: var(--bg-card-hover); }
+
+/* ===== YouTube Links ===== */
+.yt-section {
+  margin-top: 18px; padding: 12px 14px;
+  background: var(--bg-tertiary); border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+.yt-section h4 {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 8px;
+}
+.yt-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; font-size: 13px;
+  color: var(--accent-blue); text-decoration: none;
+  transition: color var(--transition);
+}
+.yt-link:hover { color: var(--accent-red); }
+.yt-icon { color: #ff0000; font-size: 14px; flex-shrink: 0; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent-red); color: #fff;
+  border: none; cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; transform: translateY(16px);
+  transition: all var(--transition);
+  z-index: 900;
+}
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: #d13555; transform: translateY(-2px); }
+
+/* ===== Print Styles ===== */
+@media print {
+  .top-nav, .back-to-top, .search-container, .toolbar,
+  .toc-wrapper, .theme-toggle, .yt-section { display: none !important; }
+  .hero { margin-top: 0; padding: 20px 0; }
+  .accordion-body { max-height: none !important; }
+  .accordion { break-inside: avoid; border: 1px solid #ccc; margin-bottom: 12px; }
+  .accordion-chevron { display: none; }
+  body { background: #fff; color: #111; font-size: 11px; }
+  .content { max-width: 100%; padding: 0; }
+  code { background: #f0f0f0; color: #333; }
+  pre { background: #f5f5f5; border-color: #ddd; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .hero { padding: 36px 16px 24px; }
+  .hero h1 { font-size: 26px; }
+  .content { padding: 0 12px 80px; }
+  .accordion-header { padding: 14px 14px; gap: 10px; font-size: 14px; }
+  .accordion-content { padding: 0 14px 16px; }
+  .toc-grid.open { grid-template-columns: 1fr; }
+  .section-number { font-size: 11px; padding: 2px 6px; }
+  .accordion-tag { display: none; }
+}
+
+/* ===== No-results ===== */
+.no-results {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted); font-size: 15px;
+  display: none;
+}
+.no-results.visible { display: block; }
+.no-results .nr-icon { font-size: 40px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAVIGATION ===== -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <div class="logo">BE</div>
+    <span>Interview Prep</span>
+  </div>
+  <div class="nav-controls">
+    <span class="nav-stats" id="navStats">31 topics</span>
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">&#9790;</button>
+  </div>
+  <div class="progress-bar" id="progressBar"></div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <h1>Backend Engineer Interview Prep</h1>
+  <p class="subtitle">A comprehensive guide covering 31 essential topics for backend engineering interviews, from system design to AI agents.</p>
+  <div class="hero-meta">
+    <span>&#128218; 31 Topics</span>
+    <span>&#9201; ~8 hour study</span>
+    <span>&#127919; 100+ Q&amp;As</span>
+  </div>
+  <br>
+  <div class="search-container">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search topics... (e.g. Kafka, caching, event loop)">
+    <button class="search-clear" id="searchClear" aria-label="Clear search">&times;</button>
+  </div>
+  <div class="toolbar" id="toolbar">
+    <button class="toolbar-btn" data-filter="all">All</button>
+    <button class="toolbar-btn" data-filter="lang">Languages</button>
+    <button class="toolbar-btn" data-filter="arch">Architecture</button>
+    <button class="toolbar-btn" data-filter="cloud">Cloud</button>
+    <button class="toolbar-btn" data-filter="db">Databases</button>
+    <button class="toolbar-btn" data-filter="infra">DevOps</button>
+    <button class="toolbar-btn" data-filter="ai">AI/ML</button>
+    <button class="toolbar-btn" data-filter="pay">Payments</button>
+  </div>
+</header>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc-wrapper">
+  <button class="toc-toggle" id="tocToggle">
+    <span>&#128203; Table of Contents</span>
+    <span class="chevron">&#9660;</span>
+  </button>
+  <div class="toc-grid" id="tocGrid"></div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="content" id="mainContent">
+
+  <div class="no-results" id="noResults">
+    <div class="nr-icon">&#128301;</div>
+    <p>No topics match your search.</p>
+  </div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: Languages & Frameworks -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="lang">Languages &amp; Frameworks</div>
+
+<!-- 1. Node.js Deep Dive -->
+<div class="accordion" data-tags="lang" data-keywords="node nodejs event loop streams clustering worker threads cjs esm javascript" id="section-1">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">01</span>
+    <span class="accordion-title">Node.js Deep Dive</span>
+    <span class="accordion-tag tag-lang">Language</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Node.js runs JavaScript on the V8 engine with a single-threaded event loop for non-blocking I/O. Mastering its internals is critical for backend roles involving high-concurrency services.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Event Loop Phases:</strong> The libuv event loop cycles through phases: <code>timers</code> (setTimeout/setInterval callbacks), <code>pending callbacks</code> (deferred I/O), <code>idle/prepare</code> (internal), <code>poll</code> (retrieve new I/O events), <code>check</code> (setImmediate callbacks), <code>close callbacks</code> (e.g. socket.on('close')).</li>
+      <li><strong>Microtasks vs Macrotasks:</strong> Microtasks (<code>Promise.then</code>, <code>queueMicrotask</code>) drain completely between each event loop phase. Macrotasks (setTimeout, setInterval, I/O) execute one per phase iteration. <code>process.nextTick</code> has its own queue that drains before microtasks.</li>
+      <li><strong>process.nextTick vs setImmediate:</strong> <code>nextTick</code> fires before I/O and before microtasks; <code>setImmediate</code> fires in the check phase after I/O. Prefer <code>setImmediate</code> for yielding to I/O.</li>
+      <li><strong>Streams &amp; Backpressure:</strong> Readable, Writable, Duplex, Transform. <code>pipe()</code> handles backpressure automatically. If <code>writable.write()</code> returns false, pause the readable until the <code>'drain'</code> event.</li>
+      <li><strong>Clustering vs worker_threads:</strong> <code>cluster</code> forks multiple processes sharing a server port (multi-core). <code>worker_threads</code> share memory via SharedArrayBuffer for CPU-intensive tasks within one process.</li>
+      <li><strong>Error Handling:</strong> Always handle <code>'error'</code> events on streams/emitters (uncaught crashes the process). Use <code>process.on('uncaughtException')</code> and <code>'unhandledRejection'</code> as safety nets, not flow control.</li>
+      <li><strong>CJS vs ESM:</strong> CommonJS uses <code>require()</code> / <code>module.exports</code>, synchronous. ESM uses <code>import</code> / <code>export</code>, async, supports top-level await and tree-shaking. ESM is the future standard.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: What happens if you starve the event loop with a CPU-bound task?</div>
+      <div class="qa-answer">The single thread blocks, so no I/O callbacks fire, HTTP requests time out, and the server appears unresponsive. Solutions: offload to <code>worker_threads</code>, break work into chunks with <code>setImmediate</code>, or use a separate microservice for heavy computation.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: Explain the order: setTimeout(0), setImmediate, Promise.resolve().then(), process.nextTick()</div>
+      <div class="qa-answer">In the main module: <code>nextTick</code> first (its queue drains before microtasks), then <code>Promise.then</code> (microtask), then <code>setTimeout</code> or <code>setImmediate</code> (their order in the main module is non-deterministic; inside an I/O callback, <code>setImmediate</code> always fires before <code>setTimeout(0)</code>).</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: How does Node.js handle 10k concurrent connections on a single thread?</div>
+      <div class="qa-answer">Node delegates I/O to the OS kernel (epoll/kqueue/IOCP) via libuv. The event loop just processes callbacks when I/O completes. No thread per connection is needed. The bottleneck is CPU work in callbacks, not connection count.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=eiC58R16hb8" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Node.js Event Loop &mdash; Lydia Hallie</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=cMde7jhQlZI" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Node.js Streams &mdash; Fireship</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 2. Python Internals -->
+<div class="accordion" data-tags="lang" data-keywords="python gil asyncio decorators metaclasses generators memory management dunder" id="section-2">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">02</span>
+    <span class="accordion-title">Python Internals</span>
+    <span class="accordion-tag tag-lang">Language</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Python's CPython implementation has unique characteristics like the GIL and reference counting. Understanding these internals helps write performant backend code and answer deep interview questions.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>GIL (Global Interpreter Lock):</strong> A mutex in CPython that allows only one thread to execute Python bytecode at a time. This means CPU-bound multithreading does not achieve parallelism. Use <code>multiprocessing</code>, <code>concurrent.futures.ProcessPoolExecutor</code>, or C extensions to bypass it. I/O-bound threads still benefit because the GIL is released during I/O operations.</li>
+      <li><strong>asyncio:</strong> Single-threaded concurrency via coroutines. <code>async def</code> creates a coroutine; <code>await</code> yields control to the event loop. <code>asyncio.gather()</code> runs tasks concurrently. <code>asyncio.Semaphore</code> limits concurrency. <code>asyncio.create_task()</code> schedules coroutines.</li>
+      <li><strong>Decorators &amp; functools.wraps:</strong> A decorator wraps a function. <code>@functools.wraps(fn)</code> preserves the original function's <code>__name__</code>, <code>__doc__</code>, and <code>__module__</code>. Decorators can be stacked; they apply bottom-up.</li>
+      <li><strong>Metaclasses vs __init_subclass__:</strong> Metaclasses control class creation (rarely needed). <code>__init_subclass__</code> (Python 3.6+) is the simpler hook for customizing subclass creation without a metaclass.</li>
+      <li><strong>Generators &amp; yield from:</strong> Generators are lazy iterators using <code>yield</code>. <code>yield from</code> delegates to a sub-generator, propagating values and exceptions. Memory-efficient for large datasets.</li>
+      <li><strong>Memory Management:</strong> CPython uses reference counting as primary GC plus a cyclic garbage collector for reference cycles. <code>__slots__</code> replaces <code>__dict__</code> per instance, reducing memory by ~40% for many small objects.</li>
+      <li><strong>Dunder Methods:</strong> <code>__repr__</code>, <code>__str__</code>, <code>__eq__</code>, <code>__hash__</code>, <code>__enter__/__exit__</code> (context managers), <code>__getattr__/__setattr__</code>, <code>__call__</code>.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why can't you use threads for CPU-bound parallelism in Python?</div>
+      <div class="qa-answer">The GIL only allows one thread to execute Python bytecode at a time. For CPU-bound work, threads actually add overhead from context-switching without gaining parallelism. Use <code>multiprocessing</code> (separate processes with their own GIL), or write the hot path in C/Cython/Rust.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: What is the difference between asyncio.gather and asyncio.wait?</div>
+      <div class="qa-answer"><code>gather()</code> runs awaitables concurrently and returns results in order; it raises the first exception by default. <code>wait()</code> returns two sets (done, pending) and supports <code>return_when=FIRST_COMPLETED</code> for more flexible control. Use <code>TaskGroup</code> (3.11+) for structured concurrency with proper cancellation.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: When would you use __slots__?</div>
+      <div class="qa-answer">When creating millions of instances of a small class (e.g. data records, graph nodes). <code>__slots__</code> prevents creation of <code>__dict__</code> per instance, saving ~64 bytes each. Trade-off: no dynamic attribute assignment, and each level of inheritance must redeclare slots.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=XVcRQ6T9RHo" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Python GIL Explained &mdash; mCoding</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=2IW-ZEui4h4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Python Asyncio &mdash; ArjanCodes</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 28. FastAPI -->
+<div class="accordion" data-tags="lang" data-keywords="fastapi pydantic dependency injection async middleware lifespan router python framework" id="section-28">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">28</span>
+    <span class="accordion-title">FastAPI</span>
+    <span class="accordion-tag tag-lang">Framework</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">FastAPI is a modern Python web framework built on Starlette and Pydantic, offering automatic OpenAPI docs, type validation, and async support out of the box.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Pydantic Validation:</strong> Request/response models defined as Pydantic <code>BaseModel</code> classes. Automatic validation, serialization, and OpenAPI schema generation. Use <code>Field()</code> for constraints, <code>validator</code>/<code>field_validator</code> for custom logic.</li>
+      <li><strong>Dependency Injection:</strong> <code>Depends()</code> for composable dependencies. Common uses: DB session lifecycle (<code>get_db</code> yields a session, ensures cleanup), auth (<code>get_current_user</code>), pagination parameters. Dependencies can be nested and cached per-request.</li>
+      <li><strong>async def vs def:</strong> <code>async def</code> endpoints run on the event loop (use for I/O-bound with async drivers). Regular <code>def</code> endpoints run in a threadpool (safe for blocking I/O like sync DB drivers). Mixing blocking code in an <code>async def</code> blocks the entire event loop.</li>
+      <li><strong>BackgroundTasks:</strong> Fire-and-forget tasks after the response is sent. Use for sending emails, logging, non-critical side effects. Not a replacement for a task queue (Celery, etc.) for heavy work.</li>
+      <li><strong>Middleware &amp; Lifespan:</strong> Middleware wraps every request (timing, CORS, auth). Lifespan events (<code>@asynccontextmanager</code>) replace <code>on_startup</code>/<code>on_shutdown</code> for initializing DB pools, ML models, etc.</li>
+      <li><strong>Router Organization:</strong> Use <code>APIRouter</code> for modular route grouping with prefixes and tags. Keep routers thin; business logic in services/repositories.</li>
+      <li><strong>FastAPI vs Django REST Framework:</strong> FastAPI: async-first, auto-docs, Pydantic, newer. DRF: mature ecosystem, ORM integration, admin panel, better for monoliths.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: What happens if you call a synchronous ORM inside an async def endpoint?</div>
+      <div class="qa-answer">It blocks the event loop thread, causing all other concurrent requests to stall. Either use <code>def</code> instead of <code>async def</code> (FastAPI auto-runs it in a threadpool), or use an async ORM like SQLAlchemy 2.0 async or Tortoise ORM.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: How does FastAPI dependency injection handle cleanup?</div>
+      <div class="qa-answer">Use <code>yield</code> in dependencies: code before <code>yield</code> runs on setup, the yielded value is injected, and code after <code>yield</code> runs on teardown (even if an exception occurs). This is the pattern for DB session management.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=SORiTsvnU28" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> FastAPI Tutorial &mdash; ArjanCodes</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=7t2alSnE2-I" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> FastAPI Full Course &mdash; Coding with Robby</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: Architecture & Design -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="arch">Architecture &amp; Design</div>
+
+<!-- 3. Microservices Architecture -->
+<div class="accordion" data-tags="arch" data-keywords="microservices bounded context grpc rest circuit breaker saga api gateway service discovery strangler outbox" id="section-3">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">03</span>
+    <span class="accordion-title">Microservices Architecture</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Microservices decompose a system into independently deployable services organized around business capabilities. Each service owns its data and communicates through well-defined APIs.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Bounded Contexts (DDD):</strong> Each microservice aligns to a bounded context &mdash; a clear boundary where a particular domain model applies. Services should not share databases.</li>
+      <li><strong>Sync vs Async Communication:</strong> Sync: REST (simple, HTTP-based), gRPC (protobuf, streaming, efficient). Async: message queues (SQS, RabbitMQ) for decoupling, event streams (Kafka) for event-driven architectures.</li>
+      <li><strong>Circuit Breaker:</strong> Three states: <em>Closed</em> (requests flow normally), <em>Open</em> (requests fail fast after threshold), <em>Half-Open</em> (limited requests to test recovery). Prevents cascading failures.</li>
+      <li><strong>Saga Pattern:</strong> Manages distributed transactions. <em>Choreography:</em> each service listens for events and reacts (simple, but harder to trace). <em>Orchestration:</em> a central coordinator directs the saga steps (more control, single point of failure).</li>
+      <li><strong>API Gateway:</strong> Single entry point for clients. Handles routing, rate limiting, auth, request aggregation. Examples: Kong, AWS API Gateway, Envoy.</li>
+      <li><strong>Service Discovery:</strong> Client-side (service registry like Consul, client picks instance), server-side (load balancer resolves), DNS-based (Kubernetes Services).</li>
+      <li><strong>Strangler Fig:</strong> Migrate a monolith incrementally by routing new features to microservices while the monolith still handles legacy paths.</li>
+      <li><strong>Outbox Pattern:</strong> Write events to an outbox table in the same DB transaction as the business data. A separate process (Debezium CDC or poller) publishes them to the message broker. Guarantees at-least-once delivery without distributed transactions.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you handle distributed transactions across microservices?</div>
+      <div class="qa-answer">Avoid 2PC (two-phase commit) &mdash; it is slow and brittle. Use the Saga pattern instead. For choreography, each service publishes an event on success and listens for compensating events on failure. For orchestration, a saga orchestrator coordinates steps and triggers compensations. Combine with the Outbox Pattern for reliable event publishing.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: When would you NOT use microservices?</div>
+      <div class="qa-answer">Small teams, early-stage products, when domain boundaries are unclear, or when the operational cost (monitoring, tracing, deployment pipelines per service) outweighs the benefit. Start with a well-modularized monolith and extract services when you have clear bounded contexts and scaling needs.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=lTAcCNbJ7KE" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Microservices Explained &mdash; ByteByteGo</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=ADHcBxEXvFA" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Circuit Breaker Pattern &mdash; Hussein Nasser</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 4. Event-Driven Systems & CQRS -->
+<div class="accordion" data-tags="arch" data-keywords="event driven cqrs event sourcing idempotency command query outbox pattern append only" id="section-4">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">04</span>
+    <span class="accordion-title">Event-Driven Systems &amp; CQRS</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Event-driven architecture decouples producers from consumers via events. CQRS and Event Sourcing are complementary patterns for systems with complex domain logic or asymmetric read/write loads.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Event vs Command vs Query:</strong> An <em>Event</em> is a fact that happened (past tense, immutable: <code>OrderPlaced</code>). A <em>Command</em> is a request to do something (imperative: <code>PlaceOrder</code>). A <em>Query</em> is a request for data (no side effects: <code>GetOrderStatus</code>).</li>
+      <li><strong>Event Sourcing:</strong> Store state as a sequence of events (append-only log) instead of current state. Rebuild current state by replaying events. Use <em>snapshots</em> every N events to speed up replay. Pros: full audit trail, time-travel debugging, enables CQRS. Cons: complexity, schema evolution, eventual consistency.</li>
+      <li><strong>CQRS:</strong> Separate read models (optimized for queries, possibly denormalized) from write models (handle commands, enforce business rules). Read and write models can use different databases. Sync via events.</li>
+      <li><strong>Idempotency:</strong> Operations that produce the same result when applied multiple times. Techniques: idempotency keys (client-generated UUID stored server-side), natural idempotency (PUT replaces entire resource), upsert (INSERT ON CONFLICT DO UPDATE).</li>
+      <li><strong>Outbox Pattern:</strong> Write the event to a local DB table within the same transaction. A relay process (CDC or polling) publishes it to the broker. Ensures exactly-once semantics at the boundary.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: What problems does Event Sourcing solve that a traditional DB doesn't?</div>
+      <div class="qa-answer">Full audit trail (every state change recorded), temporal queries (state at any point in time), easy event-driven integration (events are the source of truth), and debugging (replay to reproduce bugs). The trade-off is increased complexity in querying current state, handling schema evolution, and managing storage growth.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: Do you always need CQRS with Event Sourcing?</div>
+      <div class="qa-answer">No, but they pair well. Event Sourcing makes writes an event log, which is poor for queries. CQRS adds optimized read models projected from events. You can use CQRS without Event Sourcing (e.g., separate read replicas) or Event Sourcing without CQRS (query the event stream directly, though this is slow).</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=rUDN40rdly8" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Event Sourcing &mdash; CodeOpinion</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=DQ3D_mplIgY" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> CQRS Explained &mdash; Raw Coding</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 5. REST API Design -->
+<div class="accordion" data-tags="arch" data-keywords="rest api http methods status codes versioning pagination idempotency hateoas" id="section-5">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">05</span>
+    <span class="accordion-title">REST API Design</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">REST is the most widely used API style. Understanding its constraints, proper use of HTTP semantics, and real-world design patterns is fundamental for any backend engineer.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Fielding's Constraints:</strong> Client-server, stateless, cacheable, uniform interface (resource identification via URI, manipulation through representations, self-descriptive messages, HATEOAS), layered system, code-on-demand (optional).</li>
+      <li><strong>HTTP Methods &amp; Idempotency:</strong></li>
+    </ul>
+    <div class="table-wrapper">
+    <table>
+      <tr><th>Method</th><th>Safe</th><th>Idempotent</th><th>Use</th></tr>
+      <tr><td><code>GET</code></td><td>Yes</td><td>Yes</td><td>Read a resource</td></tr>
+      <tr><td><code>POST</code></td><td>No</td><td>No</td><td>Create / trigger action</td></tr>
+      <tr><td><code>PUT</code></td><td>No</td><td>Yes</td><td>Full replace</td></tr>
+      <tr><td><code>PATCH</code></td><td>No</td><td>No*</td><td>Partial update</td></tr>
+      <tr><td><code>DELETE</code></td><td>No</td><td>Yes</td><td>Remove a resource</td></tr>
+    </table>
+    </div>
+    <ul class="concept-list">
+      <li><strong>Status Codes:</strong> <code>200</code> OK, <code>201</code> Created, <code>204</code> No Content, <code>400</code> Bad Request, <code>401</code> Unauthorized, <code>403</code> Forbidden, <code>404</code> Not Found, <code>409</code> Conflict, <code>422</code> Unprocessable Entity, <code>429</code> Too Many Requests, <code>500</code> Internal Server Error, <code>502</code> Bad Gateway, <code>503</code> Service Unavailable.</li>
+      <li><strong>Versioning:</strong> URI path (<code>/v1/users</code>) &mdash; most common. Header (<code>Accept: application/vnd.api+json;version=2</code>). Query param (<code>?version=2</code>). URI path is simplest to reason about.</li>
+      <li><strong>Pagination:</strong> <em>Offset:</em> simple but slow for large offsets (DB scans). <em>Cursor:</em> opaque token, consistent for real-time data. <em>Keyset:</em> <code>WHERE id > last_seen ORDER BY id LIMIT N</code>, performant and stable.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why is offset pagination problematic at scale?</div>
+      <div class="qa-answer">The database must scan and discard <code>OFFSET</code> rows before returning results. At offset 1,000,000 with limit 20, it processes 1,000,020 rows. Keyset/cursor pagination uses an indexed <code>WHERE</code> clause, making every page equally fast regardless of depth.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: PATCH is listed as non-idempotent. Why?</div>
+      <div class="qa-answer">A JSON Merge Patch (replace fields) is idempotent in practice. But the PATCH spec allows non-idempotent operations (e.g., <code>{"op":"add","path":"/tags/-","value":"new"}</code> in JSON Patch appends, so applying it twice adds the tag twice). The HTTP spec does not guarantee idempotency.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=-mN3VyJuCjM" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> REST API Design Best Practices &mdash; ByteByteGo</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 6. GraphQL -->
+<div class="accordion" data-tags="arch" data-keywords="graphql schema resolver n+1 dataloader security depth limiting complexity" id="section-6">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">06</span>
+    <span class="accordion-title">GraphQL</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">GraphQL provides a typed schema and lets clients request exactly the data they need. It solves over-fetching and under-fetching but introduces its own challenges around performance and security.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Schema-First:</strong> Define types, queries, mutations, and subscriptions in SDL. The schema is the contract. Code-first alternatives (e.g., Strawberry, TypeGraphQL) generate SDL from code.</li>
+      <li><strong>Resolver Chain:</strong> Each field has a resolver. Parent resolver result is passed down. Resolvers compose in a tree: <code>Query.user</code> &rarr; <code>User.posts</code> &rarr; <code>Post.comments</code>.</li>
+      <li><strong>N+1 Problem &amp; DataLoader:</strong> Naive resolvers: 1 query for user, N queries for each user's posts. DataLoader batches and caches: collects all requested IDs within one event loop tick, issues one batch query. DataLoader instances must be per-request (not global) to avoid stale cache.</li>
+      <li><strong>When GraphQL vs REST:</strong> GraphQL excels for: varied client needs (mobile vs web), deeply nested data, rapid iteration. REST is better for: simple CRUD, caching (HTTP cache works naturally), file uploads, public APIs.</li>
+      <li><strong>Security:</strong> <em>Depth limiting:</em> reject queries deeper than N levels. <em>Complexity analysis:</em> assign cost to each field, reject queries above threshold. <em>Disable introspection in production.</em> <em>Field-level authorization</em> in resolvers (not just endpoint-level).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How does DataLoader solve the N+1 problem?</div>
+      <div class="qa-answer">DataLoader collects all load calls made during the same tick of the event loop into a batch. Instead of N individual queries, it issues one query with all IDs (e.g., <code>SELECT * FROM posts WHERE user_id IN (...)</code>). Results are cached for the request duration to prevent duplicate fetches.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you prevent a malicious deeply nested query from DoS-ing your server?</div>
+      <div class="qa-answer">Three layers: (1) <em>Depth limiting</em> &mdash; reject queries deeper than a threshold (e.g., 10 levels). (2) <em>Complexity analysis</em> &mdash; assign costs to fields and reject queries exceeding a budget. (3) <em>Rate limiting</em> per client. Also disable introspection in production.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=eIQh02xuVw4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> GraphQL Explained in 100 Seconds &mdash; Fireship</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 20. Serverless Architecture -->
+<div class="accordion" data-tags="arch" data-keywords="serverless lambda dynamodb anti-patterns cold start lambda-lith" id="section-20">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">20</span>
+    <span class="accordion-title">Serverless Architecture</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Serverless lets you run code without managing servers. AWS Lambda is the most common. Understanding when to use it and the anti-patterns to avoid is critical.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>When to Use:</strong> Event-driven workloads, variable traffic with idle periods, quick prototypes, glue logic between services, scheduled tasks. Not ideal for: long-running processes, stateful workloads, consistent low-latency requirements, heavy compute.</li>
+      <li><strong>Lambda + DynamoDB Cart Abandonment:</strong> S3 event &rarr; Lambda processes upload &rarr; writes to DynamoDB with TTL. DynamoDB Streams &rarr; Lambda detects TTL expiry &rarr; sends cart reminder via SES/SNS. Fully serverless, scales to zero.</li>
+      <li><strong>Anti-Patterns:</strong> <em>Lambda-lith:</em> cramming an entire Express/Flask app into one Lambda (defeats purpose, cold start penalty). <em>Synchronous chains:</em> Lambda A calls Lambda B calls Lambda C (latency compounds, use Step Functions). <em>Ignoring cold starts:</em> not using provisioned concurrency for latency-sensitive paths.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you reduce Lambda cold start times?</div>
+      <div class="qa-answer">Provisioned concurrency (keeps instances warm), smaller deployment packages, use lightweight runtimes (Node.js/Python over Java), lazy-load SDK clients, SnapStart (Java), keep functions focused (not a monolith).</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=W_VV2Fx32_Y" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Serverless Explained &mdash; Fireship</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 21. Zero-Downtime Migrations -->
+<div class="accordion" data-tags="arch" data-keywords="zero downtime migration expand contract blue green canary rolling deployment feature flags" id="section-21">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">21</span>
+    <span class="accordion-title">Zero-Downtime Migrations</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Deploying schema changes and code updates without downtime requires careful sequencing. The Expand-Contract pattern and safe PostgreSQL operations are essential knowledge.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Expand-Contract Pattern (3 steps):</strong> (1) <em>Expand:</em> add new column/table, deploy code that writes to both old and new. (2) <em>Migrate:</em> backfill existing data, switch reads to new. (3) <em>Contract:</em> remove old column/table and old code paths.</li>
+      <li><strong>Dangerous PostgreSQL Operations:</strong> <code>ADD COLUMN DEFAULT</code> (pre-PG11 rewrites table &mdash; PG11+ is safe). <code>CREATE INDEX</code> locks writes &mdash; use <code>CREATE INDEX CONCURRENTLY</code>. Adding <code>NOT NULL</code> constraint scans entire table &mdash; add as <code>CHECK</code> constraint with <code>NOT VALID</code>, then <code>VALIDATE</code> separately.</li>
+      <li><strong>Deployment Strategies:</strong> <em>Rolling:</em> replace instances one by one (requires backward compatibility). <em>Blue-Green:</em> two identical environments, switch traffic at once (instant rollback). <em>Canary:</em> route small percentage to new version, monitor, gradually increase. <em>Feature Flags:</em> decouple deployment from release (deploy dark, enable for users gradually).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you rename a database column with zero downtime?</div>
+      <div class="qa-answer">Never rename directly. (1) Add new column, (2) deploy code to write both, (3) backfill old rows, (4) deploy code to read from new, (5) stop writing to old, (6) drop old column. Each step is a separate deployment.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=AWm2F4Ey7LY" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Zero Downtime Deployments &mdash; ByteByteGo</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 22. Autoscaling Patterns -->
+<div class="accordion" data-tags="arch" data-keywords="autoscaling horizontal vertical hpa keda pdb load testing k6 p99" id="section-22">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">22</span>
+    <span class="accordion-title">Autoscaling Patterns</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Autoscaling dynamically adjusts compute resources based on demand. Getting the strategy right means balancing cost, performance, and availability.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Horizontal vs Vertical:</strong> Horizontal adds more instances (preferred for stateless services). Vertical increases instance size (limited ceiling, requires restart).</li>
+      <li><strong>HPA Custom Metrics:</strong> Scale on application-specific metrics (queue depth, request latency, active connections) via Prometheus adapter or custom metrics API. Better than CPU-only scaling for event-driven workloads.</li>
+      <li><strong>KEDA (scale-to-zero):</strong> Kubernetes Event-Driven Autoscaler. Scales deployments from 0 based on event sources (Kafka lag, SQS queue length, cron). Saves cost during idle periods.</li>
+      <li><strong>Aggressive Up / Conservative Down:</strong> Scale up quickly (seconds) to handle traffic spikes. Scale down slowly (minutes) to avoid flapping. Use stabilization windows and cooldown periods.</li>
+      <li><strong>Pod Disruption Budgets (PDB):</strong> Guarantee minimum available pods during voluntary disruptions (node drain, cluster upgrade). <code>minAvailable</code> or <code>maxUnavailable</code>.</li>
+      <li><strong>Load Testing:</strong> Use k6, Locust, or Artillery. Measure p50, p95, p99 latencies. Find the breaking point. Test autoscaling behavior under ramp-up.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why is CPU-based autoscaling insufficient for queue-processing workloads?</div>
+      <div class="qa-answer">Queue processors may have low CPU usage but high backlog. The metric that matters is queue depth (messages waiting). KEDA can scale based on SQS ApproximateNumberOfMessages or Kafka consumer lag, spinning up workers when the queue grows and scaling to zero when it drains.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=lx1lMNFdtJU" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Autoscaling in Kubernetes &mdash; KodeKloud</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 23. Cost Optimization -->
+<div class="accordion" data-tags="arch" data-keywords="cost optimization spot instances reserved right sizing scale to zero lifecycle policies caching" id="section-23">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">23</span>
+    <span class="accordion-title">Cost Optimization</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Cloud costs can spiral without discipline. Cost optimization is an ongoing practice that balances performance with spend.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Compute:</strong> Right-size instances (monitor actual CPU/memory use). Use spot/preemptible instances for fault-tolerant workloads (60-90% cheaper). Reserved instances / savings plans for steady-state. Scale-to-zero for dev/staging environments.</li>
+      <li><strong>Storage:</strong> Lifecycle policies (S3 Intelligent-Tiering, move to Glacier after N days). Compression (gzip, zstd) for logs and backups. Right-size EBS volumes (gp3 over gp2, provision only needed IOPS).</li>
+      <li><strong>Database:</strong> Connection pooling (PgBouncer) to reduce idle connections. Read replicas for read-heavy workloads. Caching (Redis) to reduce DB queries. DynamoDB on-demand vs provisioned (model the break-even).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How would you reduce cloud costs by 30% without impacting performance?</div>
+      <div class="qa-answer">Audit for: (1) idle resources (dev instances running 24/7 &mdash; schedule or scale to zero), (2) over-provisioned instances (right-size based on actual metrics), (3) spot instances for batch/CI, (4) reserved instances for production base load, (5) caching to reduce DB and API calls, (6) storage tiering for old data.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Nl7TmFJLXns" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Cloud Cost Optimization &mdash; A Cloud Guru</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 24. System Design Framework -->
+<div class="accordion" data-tags="arch" data-keywords="system design interview framework url shortener rate limiter chat notifications feed latency back of envelope" id="section-24">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">24</span>
+    <span class="accordion-title">System Design Framework</span>
+    <span class="accordion-tag tag-arch">Architecture</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">System design interviews test your ability to architect scalable systems under ambiguity. Having a structured framework ensures you cover all bases in 45 minutes.</p>
+
+    <h3 class="sub-heading">5-Step Framework</h3>
+    <ul class="concept-list">
+      <li><strong>1. Requirements (3-5 min):</strong> Functional requirements (what does the system do), non-functional (scale, latency, availability, consistency), clarify scope (what is NOT in scope).</li>
+      <li><strong>2. High-Level Design (5-10 min):</strong> Draw main components (clients, load balancer, application servers, databases, caches, queues). Define data flow for core operations.</li>
+      <li><strong>3. Data Model &amp; API (5 min):</strong> Define key entities, relationships, database choice (SQL vs NoSQL). Define API endpoints with HTTP methods.</li>
+      <li><strong>4. Deep Dive (15-20 min):</strong> Discuss 2-3 areas in depth (scaling bottlenecks, trade-offs, failure scenarios). This is where you differentiate yourself.</li>
+      <li><strong>5. Wrap-Up (2-3 min):</strong> Summarize trade-offs made, mention what you would add with more time (monitoring, security, analytics).</li>
+    </ul>
+
+    <h3 class="sub-heading">Latency Numbers Every Engineer Should Know</h3>
+    <div class="table-wrapper">
+    <table>
+      <tr><th>Operation</th><th>Latency</th></tr>
+      <tr><td>L1 cache reference</td><td>~1 ns</td></tr>
+      <tr><td>L2 cache reference</td><td>~4 ns</td></tr>
+      <tr><td>Main memory reference</td><td>~100 ns</td></tr>
+      <tr><td>SSD random read</td><td>~16 &mu;s</td></tr>
+      <tr><td>HDD seek</td><td>~2 ms</td></tr>
+      <tr><td>Round trip same datacenter</td><td>~0.5 ms</td></tr>
+      <tr><td>Round trip CA &rarr; Netherlands</td><td>~150 ms</td></tr>
+    </table>
+    </div>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Design a URL Shortener &mdash; what are the key decisions?</div>
+      <div class="qa-answer">Key decisions: (1) ID generation &mdash; hash (MD5/SHA, take first 7 chars) vs counter (base62 encode). (2) Storage &mdash; key-value store (DynamoDB) for high throughput. (3) Redirection &mdash; 301 (cacheable) vs 302 (trackable). (4) Analytics &mdash; async logging via Kafka. (5) Scale &mdash; read-heavy, cache popular URLs in Redis.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: Back-of-envelope: How much storage for 1 billion URLs?</div>
+      <div class="qa-answer">Each URL record: ~500 bytes (short URL + long URL + metadata). 1B x 500B = 500 GB. Fits on a single modern SSD. With replication factor 3: ~1.5 TB. Storage is not the bottleneck; read throughput is.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=i7twT3x5yv8" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> System Design Interview Framework &mdash; ByteByteGo</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=bUHFg8CZFws" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> System Design Primer &mdash; Gaurav Sen</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: Cloud Platforms -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="cloud">Cloud Platforms</div>
+
+<!-- 7. AWS -->
+<div class="accordion" data-tags="cloud" data-keywords="aws lambda dynamodb fargate sqs sns eventbridge cold start provisioned concurrency single table design gsi" id="section-7">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">07</span>
+    <span class="accordion-title">AWS (Lambda, DynamoDB, Fargate, SQS/SNS)</span>
+    <span class="accordion-tag tag-cloud">Cloud</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">AWS is the dominant cloud provider. Lambda, DynamoDB, Fargate, and messaging services (SQS/SNS/EventBridge) form the backbone of modern serverless and container-based architectures.</p>
+
+    <h3 class="sub-heading">Lambda</h3>
+    <ul class="concept-list">
+      <li><strong>Cold Start:</strong> First invocation initializes runtime, loads code. Duration: ~100ms (Python/Node), ~1-3s (Java). <strong>Warm Start:</strong> reuses existing container. <strong>Provisioned Concurrency:</strong> pre-warms N instances (eliminates cold starts, costs more).</li>
+      <li><strong>Memory/CPU Scaling:</strong> CPU scales linearly with memory (at 1769 MB you get 1 full vCPU). More memory = faster execution = potentially lower cost.</li>
+      <li><strong>15 min timeout:</strong> Hard limit. For longer tasks, use Step Functions, Fargate, or break into smaller Lambdas.</li>
+      <li><strong>Common Patterns:</strong> API Gateway + Lambda (REST APIs), SQS + Lambda (async processing), S3 + Lambda (file processing), DynamoDB Streams + Lambda (change data capture).</li>
+    </ul>
+
+    <h3 class="sub-heading">DynamoDB</h3>
+    <ul class="concept-list">
+      <li><strong>PK/SK:</strong> Partition Key determines data distribution. Sort Key enables range queries within a partition. Design access patterns first, then model the table.</li>
+      <li><strong>Single Table Design:</strong> Store multiple entity types in one table using PK/SK overloading. Reduces costs and latency (one query gets related data). Trade-off: complex, hard to evolve.</li>
+      <li><strong>On-Demand vs Provisioned:</strong> On-demand: pay per request (good for unpredictable traffic). Provisioned: set RCU/WCU (cheaper for steady traffic, use autoscaling).</li>
+      <li><strong>Consistency:</strong> Eventually consistent reads (default, half the cost). Strongly consistent reads (latest data, from leader node, double cost).</li>
+      <li><strong>GSI vs LSI:</strong> GSI: alternate PK+SK, own throughput, eventually consistent. LSI: same PK, different SK, must be created at table creation, strongly consistent reads possible.</li>
+    </ul>
+
+    <h3 class="sub-heading">Fargate &amp; Messaging</h3>
+    <ul class="concept-list">
+      <li><strong>Fargate:</strong> Serverless containers (no EC2 management). vs Lambda: Fargate for long-running tasks, larger packages, persistent connections. vs ECS on EC2: Fargate is simpler but costlier; EC2 gives control over instance types, GPU, spot.</li>
+      <li><strong>SQS vs SNS vs EventBridge:</strong> SQS: point-to-point queue (decoupling, buffering). SNS: pub/sub fan-out (one message to many subscribers). EventBridge: event bus with routing rules, schema registry, 30+ AWS service integrations, content-based filtering.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you handle DynamoDB hot partitions?</div>
+      <div class="qa-answer">Causes: one partition key gets disproportionate traffic. Solutions: (1) add randomness to PK (write sharding with suffix 0-N), (2) use a more granular PK, (3) DynamoDB adaptive capacity redistributes throughput automatically, (4) DAX (in-memory cache) absorbs reads.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=8p8K7mEMEB4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> AWS Lambda Deep Dive &mdash; Be A Better Dev</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=HaEPXoXVf2k" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> DynamoDB Explained &mdash; ByteByteGo</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 8. GCP -->
+<div class="accordion" data-tags="cloud" data-keywords="gcp gke cloud run autopilot hpa keda gpu preemptible serverless containers" id="section-8">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">08</span>
+    <span class="accordion-title">GCP (GKE, Cloud Run)</span>
+    <span class="accordion-tag tag-cloud">Cloud</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Google Cloud Platform offers GKE (managed Kubernetes) and Cloud Run (serverless containers) as primary compute options for backend services.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>GKE Standard vs Autopilot:</strong> Standard: you manage node pools, sizing, autoscaling. Autopilot: Google manages nodes, you only define pods (pay per pod resources). Autopilot simplifies ops but limits customization (no DaemonSets, SSH, privileged containers).</li>
+      <li><strong>HPA + Custom Metrics:</strong> HPA scales pods based on CPU/memory or custom metrics from Cloud Monitoring / Prometheus. Use Stackdriver adapter for custom metric scaling.</li>
+      <li><strong>KEDA for Scale-to-Zero:</strong> KEDA extends HPA to support scale-to-zero. Useful for Pub/Sub consumers, batch processors that should not run when idle.</li>
+      <li><strong>GPU Scheduling:</strong> Use node pools with GPU accelerators (NVIDIA T4, A100). Set <code>nvidia.com/gpu</code> resource requests. Node auto-provisioning can add GPU nodes on demand.</li>
+      <li><strong>Preemptible VMs / Spot VMs:</strong> Up to 80% cheaper, but can be terminated with 30s notice. Use for batch processing, CI/CD, stateless workloads with retry logic.</li>
+      <li><strong>Cloud Run:</strong> Serverless containers that scale from zero to thousands. Cold start: ~1-2s. Supports WebSockets, gRPC, concurrent requests per instance (up to 1000). vs GKE: Cloud Run for simpler stateless services; GKE for complex orchestration, stateful workloads, fine-grained control.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: When would you choose Cloud Run over GKE?</div>
+      <div class="qa-answer">Cloud Run: stateless HTTP/gRPC services, event-driven processing, teams without Kubernetes expertise, when you want zero-ops scaling. GKE: need service mesh, StatefulSets, complex networking policies, GPU workloads, long-running background processes, or multi-container pods.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Zztufl4mFQ4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> GKE Explained &mdash; Google Cloud Tech</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 9. Azure -->
+<div class="accordion" data-tags="cloud" data-keywords="azure vm scale sets powershell guacamole content moderator hybrid moderation auto shutdown" id="section-9">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">09</span>
+    <span class="accordion-title">Azure (VMs, Vision APIs)</span>
+    <span class="accordion-tag tag-cloud">Cloud</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Azure provides VM Scale Sets for auto-scaling compute, PowerShell automation, and Cognitive Services for AI capabilities like content moderation.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>VM Scale Sets:</strong> Auto-scaling groups of identical VMs. Support custom images, health probes, automatic repairs. Scale based on CPU, memory, schedule, or custom metrics. Use availability zones for HA.</li>
+      <li><strong>Azure PowerShell Automation:</strong> Azure CLI and PowerShell modules for infrastructure automation. Azure Automation runbooks for scheduled tasks, webhook-triggered scripts.</li>
+      <li><strong>Apache Guacamole:</strong> Clientless remote desktop gateway (browser-based RDP/VNC/SSH access to Azure VMs). Useful for providing secure VM access without VPN.</li>
+      <li><strong>Auto-Shutdown:</strong> Schedule VMs to shut down at specific times (cost savings for dev/test). Azure DevTest Labs provides more sophisticated scheduling.</li>
+      <li><strong>Content Moderator API:</strong> AI-based moderation for text, images, video. Detects adult content, profanity, PII. Returns confidence scores and categories.</li>
+      <li><strong>Hybrid Moderation Pipeline:</strong> Automated AI moderation (fast, cheap, first pass) &rarr; human review queue (edge cases, low confidence scores) &rarr; feedback loop to improve AI model. Azure Content Moderator + custom ML + human review tool.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How would you design a hybrid content moderation system?</div>
+      <div class="qa-answer">Tier 1: Azure Content Moderator API for immediate, automated screening (text, image). Tier 2: custom ML model for domain-specific content. Tier 3: human review queue for edge cases (confidence below threshold). Include feedback loop: human decisions retrain the custom model. Track false positive/negative rates to tune thresholds.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=inaXkN2UrFE" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Azure VMs Explained &mdash; Adam Marczak</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: DevOps & Infrastructure -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="infra">DevOps &amp; Infrastructure</div>
+
+<!-- 10. Kubernetes -->
+<div class="accordion" data-tags="infra" data-keywords="kubernetes k8s pod deployment service configmap secret statefulset daemonset hpa vpa cluster autoscaler crashloopbackoff" id="section-10">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">10</span>
+    <span class="accordion-title">Kubernetes</span>
+    <span class="accordion-tag tag-infra">DevOps</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Kubernetes is the de-facto container orchestration platform. Understanding its architecture, core objects, networking, and autoscaling is essential for backend roles.</p>
+
+    <h3 class="sub-heading">Architecture</h3>
+    <ul class="concept-list">
+      <li><strong>Control Plane:</strong> <code>kube-apiserver</code> (REST gateway), <code>etcd</code> (distributed KV store for cluster state), <code>kube-scheduler</code> (assigns pods to nodes), <code>kube-controller-manager</code> (runs controllers: ReplicaSet, Deployment, etc.).</li>
+      <li><strong>Worker Nodes:</strong> <code>kubelet</code> (ensures containers are running), <code>kube-proxy</code> (network rules, service routing), container runtime (<code>containerd</code>, CRI-O).</li>
+    </ul>
+
+    <h3 class="sub-heading">Core Objects</h3>
+    <ul class="concept-list">
+      <li><strong>Pod:</strong> Smallest deployable unit. One or more containers sharing network namespace and storage volumes.</li>
+      <li><strong>Deployment:</strong> Manages ReplicaSets for stateless apps. Handles rolling updates, rollbacks, scaling.</li>
+      <li><strong>Service Types:</strong> <code>ClusterIP</code> (internal), <code>NodePort</code> (expose on node port), <code>LoadBalancer</code> (cloud LB), <code>ExternalName</code> (DNS alias).</li>
+      <li><strong>ConfigMap/Secret:</strong> Decouple config from images. Secrets are base64-encoded (not encrypted at rest by default &mdash; enable EncryptionConfiguration or use external secrets).</li>
+      <li><strong>StatefulSet:</strong> Ordered, stable pod identities and persistent storage. Use for databases, Kafka, ZooKeeper.</li>
+      <li><strong>DaemonSet:</strong> One pod per node (log collectors, monitoring agents, node-level services).</li>
+      <li><strong>Job/CronJob:</strong> Run-to-completion tasks. CronJob for scheduled batch processing.</li>
+    </ul>
+
+    <h3 class="sub-heading">Networking &amp; Autoscaling</h3>
+    <ul class="concept-list">
+      <li><strong>CNI:</strong> Container Network Interface plugin (Calico, Cilium, Flannel). Every pod gets a unique IP.</li>
+      <li><strong>Ingress:</strong> HTTP/HTTPS routing to services. TLS termination, path-based routing, virtual hosts.</li>
+      <li><strong>Network Policies:</strong> Firewall rules for pod-to-pod traffic. Default: all traffic allowed. Use for namespace isolation.</li>
+      <li><strong>HPA/VPA/Cluster Autoscaler:</strong> HPA: horizontal pod scaling (CPU/custom metrics). VPA: vertical pod scaling (adjusts requests/limits). Cluster Autoscaler: adds/removes nodes when pods can not be scheduled.</li>
+      <li><strong>Resource Management:</strong> <code>requests</code> (scheduling guarantee) vs <code>limits</code> (hard ceiling). QoS classes: Guaranteed (requests=limits), Burstable (requests &lt; limits), BestEffort (no requests/limits set).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you debug CrashLoopBackOff?</div>
+      <div class="qa-answer"><code>kubectl describe pod &lt;name&gt;</code> for events (OOMKilled, liveness probe failures, image pull errors). <code>kubectl logs &lt;name&gt; --previous</code> for crash logs. Common causes: misconfigured env vars, missing config/secrets, failing health checks, insufficient memory limits, application bugs on startup.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: What is the difference between requests and limits?</div>
+      <div class="qa-answer"><code>requests</code>: guaranteed resources, used by the scheduler to find a suitable node. <code>limits</code>: maximum resources, enforced by the runtime (OOMKill if memory exceeded, CPU throttled). Setting requests too low causes scheduling on overcommitted nodes; setting limits too low causes unexpected throttling or kills.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=X48VuDVv0do" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Kubernetes Explained &mdash; TechWorld with Nana</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=InZVNuKY5GY" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> K8s Networking Deep Dive &mdash; KodeKloud</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 11. Docker -->
+<div class="accordion" data-tags="infra" data-keywords="docker multi-stage build layer caching dockerignore security non-root networking bridge" id="section-11">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">11</span>
+    <span class="accordion-title">Docker</span>
+    <span class="accordion-tag tag-infra">DevOps</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Docker containerizes applications for consistent environments across dev, staging, and production. Writing efficient, secure Dockerfiles is a core backend skill.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Multi-Stage Builds:</strong> Use multiple <code>FROM</code> statements. Build stage compiles/installs dependencies; final stage copies only the artifact. Drastically reduces image size.</li>
+    </ul>
+    <pre># Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+USER node
+CMD ["node", "dist/index.js"]</pre>
+    <ul class="concept-list">
+      <li><strong>Layer Caching:</strong> Each instruction creates a layer. Order instructions from least-to-most frequently changing. Copy <code>package.json</code> and install dependencies before copying source code.</li>
+      <li><strong>.dockerignore:</strong> Exclude <code>node_modules</code>, <code>.git</code>, <code>*.md</code>, test files from the build context. Speeds up builds and reduces image size.</li>
+      <li><strong>Security:</strong> Use non-root user (<code>USER node</code>). Use minimal base images (<code>alpine</code>, <code>distroless</code>). Never put secrets in images (use build args or secret mounts). Scan images with Trivy/Snyk.</li>
+      <li><strong>Networking:</strong> <code>bridge</code> (default, isolated network per host), <code>host</code> (share host network, better performance, no isolation), <code>none</code> (no networking).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why should you copy package.json before the source code?</div>
+      <div class="qa-answer">Docker caches layers. If source code changes but <code>package.json</code> does not, the <code>npm ci</code> layer is cached and not re-executed. If you copy everything first, any source change invalidates the dependency install layer, making builds much slower.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: What is the difference between CMD and ENTRYPOINT?</div>
+      <div class="qa-answer"><code>ENTRYPOINT</code> defines the executable; <code>CMD</code> provides default arguments. <code>docker run myimage --flag</code> replaces CMD but appends to ENTRYPOINT. Use ENTRYPOINT for the main process and CMD for default flags. Both can be overridden at runtime.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Gjnup-PuquQ" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Docker in 100 Seconds &mdash; Fireship</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=8vXoMqWgbQq" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Docker Best Practices &mdash; Bret Fisher</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 12. Infrastructure as Code -->
+<div class="accordion" data-tags="infra" data-keywords="terraform iac cloudformation providers resources state management plan modules drift import" id="section-12">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">12</span>
+    <span class="accordion-title">Infrastructure as Code</span>
+    <span class="accordion-tag tag-infra">DevOps</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">IaC manages infrastructure through code rather than manual processes. Terraform is the most popular multi-cloud tool, while CloudFormation is AWS-native.</p>
+
+    <h3 class="sub-heading">Terraform</h3>
+    <ul class="concept-list">
+      <li><strong>Providers:</strong> Plugins for cloud APIs (AWS, GCP, Azure, Kubernetes). Declared in <code>required_providers</code> block with version constraints.</li>
+      <li><strong>Resources:</strong> Infrastructure objects (<code>aws_instance</code>, <code>aws_s3_bucket</code>). Declarative: you describe desired state, Terraform computes the diff.</li>
+      <li><strong>State Management:</strong> <code>terraform.tfstate</code> maps real resources to config. Store remotely (S3 bucket + DynamoDB lock table for consistency). Never commit state to git (contains secrets).</li>
+      <li><strong>Plan:</strong> <code>terraform plan</code> shows what will change without applying. Always review before <code>apply</code>. Use in CI/CD for approval workflows.</li>
+      <li><strong>Modules:</strong> Reusable infrastructure packages. Use for standardized patterns (VPC, EKS cluster, RDS). Version and source from registries or git.</li>
+      <li><strong>State Drift:</strong> When real infrastructure differs from state. Detect with <code>terraform plan</code>. Remediate by importing, refreshing, or manually updating.</li>
+      <li><strong>Import:</strong> <code>terraform import</code> brings existing resources under Terraform management. Write the config first, then import to populate state.</li>
+    </ul>
+
+    <h3 class="sub-heading">CloudFormation</h3>
+    <ul class="concept-list">
+      <li><strong>Stacks:</strong> A collection of AWS resources managed as a unit. Create, update, delete together.</li>
+      <li><strong>Change Sets:</strong> Preview changes before executing (similar to <code>terraform plan</code>).</li>
+      <li><strong>Drift Detection:</strong> Detect manual changes made outside CloudFormation.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you handle Terraform state in a team?</div>
+      <div class="qa-answer">Use remote state backend (S3 + DynamoDB for locking). Enable state encryption. Never commit to git. Use workspaces or separate state files per environment. Implement CI/CD pipeline for <code>plan</code> on PR, <code>apply</code> on merge. Use <code>terraform_remote_state</code> data source for cross-stack references.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=l5k1ai_GBDE" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Terraform Explained &mdash; TechWorld with Nana</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: Databases -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="db">Databases</div>
+
+<!-- 13. MongoDB -->
+<div class="accordion" data-tags="db" data-keywords="mongodb schema design embed reference indexing aggregation pipeline replication sharding unbounded array" id="section-13">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">13</span>
+    <span class="accordion-title">MongoDB</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">MongoDB is a document database (BSON/JSON). Schema design decisions (embedding vs. referencing) and proper indexing are critical for performance.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Schema Design &mdash; Embed vs Reference:</strong> <em>Embed</em> when data is accessed together, has a 1:few relationship, and is bounded. <em>Reference</em> when data is shared across documents, has a many:many relationship, or is unbounded.</li>
+      <li><strong>Unbounded Array Anti-Pattern:</strong> Arrays that grow indefinitely (e.g., all comments on a post) cause document growth, working set bloat, and eventually hit the 16MB document limit. Solution: use a separate collection with a foreign key.</li>
+      <li><strong>Indexing:</strong> <em>Single field:</em> most common. <em>Compound (ESR rule):</em> Equality fields first, Sort fields next, Range fields last. <em>Multikey:</em> automatic for array fields. <em>Text:</em> full-text search. <em>Partial:</em> index a subset of documents (sparse). <em>TTL:</em> auto-delete documents after time.</li>
+      <li><strong>Aggregation Pipeline:</strong> <code>$match</code> (filter early), <code>$group</code> (aggregate), <code>$sort</code>, <code>$lookup</code> (left outer join), <code>$unwind</code> (flatten arrays), <code>$facet</code> (multiple aggregations in parallel). Place <code>$match</code> first to use indexes.</li>
+      <li><strong>Replication:</strong> Replica set: primary + secondaries. Automatic failover. Read preference: primary (default), secondary (for reads), nearest.</li>
+      <li><strong>Sharding:</strong> Horizontal partitioning. Shard key selection is critical and immutable. Hashed shard key: even distribution. Ranged shard key: range queries efficient. Avoid monotonically increasing shard keys (hot partition).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: What is the ESR rule for compound indexes?</div>
+      <div class="qa-answer">Equality, Sort, Range. Place fields used in equality matches first (exact match narrows candidates), then sort fields (avoids in-memory sort), then range fields last. Example: for <code>find({status: "active", age: {$gte: 25}}).sort({name: 1})</code>, create index <code>{status: 1, name: 1, age: 1}</code>.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=QAqK-R9HUhc" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> MongoDB Schema Design &mdash; MongoDB Official</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=ePbKGoJCVPE" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> MongoDB Indexing &mdash; Hussein Nasser</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 14. PostgreSQL -->
+<div class="accordion" data-tags="db" data-keywords="postgresql postgres mvcc vacuum index btree gin gist brin explain analyze partitioning pgbouncer connection pooling" id="section-14">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">14</span>
+    <span class="accordion-title">PostgreSQL</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">PostgreSQL is the most advanced open-source relational database. Deep knowledge of MVCC, indexing strategies, and query optimization is expected in backend interviews.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>MVCC:</strong> Multi-Version Concurrency Control. Each row version has <code>xmin</code> (creating transaction) and <code>xmax</code> (deleting/updating transaction). Readers never block writers. Dead tuples accumulate and must be cleaned by <code>VACUUM</code>. <code>autovacuum</code> runs automatically but may need tuning for high-write tables.</li>
+      <li><strong>Index Types:</strong>
+        <em>B-tree:</em> default, equality and range queries.
+        <em>GIN:</em> Generalized Inverted Index (arrays, JSONB, full-text search).
+        <em>GiST:</em> geometric, full-text, range types.
+        <em>BRIN:</em> Block Range Index (huge tables with naturally ordered data, very small).
+        <em>Hash:</em> equality only (rarely used, B-tree is almost always better).
+        <em>Partial:</em> <code>WHERE</code> clause on index (index active users only).
+        <em>Expression:</em> index on function result (<code>CREATE INDEX ON users (lower(email))</code>).
+        <em>Covering/INCLUDE:</em> add non-key columns for index-only scans.</li>
+      <li><strong>EXPLAIN ANALYZE:</strong> Shows actual execution plan with timings. Key nodes: <em>Seq Scan</em> (full table scan), <em>Index Scan</em> (traverse index + heap lookup), <em>Index Only Scan</em> (no heap, if visibility map is fresh), <em>Bitmap Index Scan</em> (for medium selectivity). Join types: Nested Loop (small inner), Hash Join (equality, medium tables), Merge Join (both sorted). <code>work_mem</code> affects sort and hash operations.</li>
+      <li><strong>Partitioning:</strong> <em>Range:</em> by date (most common). <em>List:</em> by category. <em>Hash:</em> even distribution. <em>Partition pruning:</em> query planner skips irrelevant partitions when the partition key is in the WHERE clause.</li>
+      <li><strong>Connection Pooling (PgBouncer):</strong> PostgreSQL forks a process per connection (expensive). PgBouncer multiplexes connections. Modes: <em>session</em> (one server conn per client session), <em>transaction</em> (release after each transaction &mdash; most efficient), <em>statement</em> (per statement, limited use).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why would VACUUM not keep up, and what happens?</div>
+      <div class="qa-answer">Causes: very high write rate, long-running transactions holding back the visibility horizon, autovacuum too conservative (not enough workers, too high thresholds). Consequences: table bloat (dead tuples consume disk), index bloat, and eventually transaction ID wraparound (database shuts down to prevent data corruption). Fix: tune autovacuum settings per table, kill long transactions, run manual VACUUM on critical tables.</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: When would you use a BRIN index?</div>
+      <div class="qa-answer">For very large tables (100M+ rows) where data is physically ordered by the indexed column (e.g., timestamp in append-only tables, auto-incrementing IDs). BRIN stores min/max per block range &mdash; tiny index size (1000x smaller than B-tree) but only useful when correlation between physical storage order and column value is high.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=XA3SBgcZwtE" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> PostgreSQL EXPLAIN &mdash; Hussein Nasser</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=clrtT_4WBAw" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> PostgreSQL Indexing &mdash; Citus Data</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 15. Redis -->
+<div class="accordion" data-tags="db" data-keywords="redis cache data structures caching patterns stampede persistence rdb aof clustering sentinel" id="section-15">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">15</span>
+    <span class="accordion-title">Redis</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Redis is an in-memory data structure store used as a cache, database, and message broker. Its rich data structures go far beyond simple key-value caching.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Data Structures:</strong> <em>Strings:</em> basic KV, counters (INCR). <em>Hashes:</em> field-value maps (user profiles). <em>Lists:</em> ordered collections (queues, feeds). <em>Sets:</em> unique elements (tags, online users). <em>Sorted Sets:</em> scored elements (leaderboards, rate limiting). <em>Streams:</em> append-only log (event streaming). <em>HyperLogLog:</em> probabilistic cardinality counting (unique visitors with 0.81% error using 12KB).</li>
+      <li><strong>Caching Patterns:</strong> <em>Cache-Aside:</em> app checks cache; on miss, reads DB, writes to cache. Most common. <em>Write-Through:</em> write to cache and DB simultaneously. <em>Write-Behind:</em> write to cache, async batch write to DB (higher throughput, risk of data loss).</li>
+      <li><strong>Cache Stampede:</strong> When a popular key expires, many concurrent requests hit the DB. Solutions: <em>Locking:</em> only one request fetches, others wait. <em>Probabilistic early recomputation:</em> refresh before TTL expires. <em>Stale-while-revalidate:</em> serve stale data while refreshing in background.</li>
+      <li><strong>Persistence:</strong> <em>RDB:</em> point-in-time snapshots (compact, slow recovery). <em>AOF:</em> append-only file logging every write (durable, slower, larger). <em>Hybrid (RDB+AOF):</em> best of both (recommended for production).</li>
+      <li><strong>Clustering:</strong> <em>Redis Cluster:</em> data sharding across nodes (16384 hash slots), automatic failover, horizontal scaling. <em>Sentinel:</em> HA for single-instance Redis (monitors, notification, automatic failover, no sharding).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How would you implement a rate limiter with Redis?</div>
+      <div class="qa-answer">Sliding window with Sorted Sets: for each request, add timestamp as score. <code>ZRANGEBYSCORE</code> to count requests in the window. <code>ZREMRANGEBYSCORE</code> to clean old entries. Atomic with Lua script. Alternatively, use the simpler fixed window with <code>INCR</code> + <code>EXPIRE</code> (less precise but simpler).</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: Redis Cluster vs Sentinel &mdash; when to use which?</div>
+      <div class="qa-answer">Sentinel: HA for a single dataset that fits in one node's memory. Provides automatic failover and monitoring. Cluster: when data exceeds one node's memory and you need horizontal scaling (sharding). Cluster also provides HA. Start with Sentinel, migrate to Cluster when you outgrow one node.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=a4yX7RUgTxI" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Redis Explained &mdash; ByteByteGo</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=jgpVdJB2sKQ" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Redis Data Structures &mdash; TechWorld with Nana</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 16. Apache Kafka -->
+<div class="accordion" data-tags="db" data-keywords="kafka broker topic partition offset consumer group replication exactly once avro schema registry debezium cdc dlq" id="section-16">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">16</span>
+    <span class="accordion-title">Apache Kafka</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Kafka is a distributed event streaming platform for high-throughput, fault-tolerant, real-time data pipelines. It is the backbone of event-driven architectures.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Architecture:</strong> <em>Broker:</em> a Kafka server. <em>Topic:</em> a named stream of records. <em>Partition:</em> ordered, immutable sequence of records within a topic (unit of parallelism). <em>Offset:</em> sequential ID for each record in a partition. <em>Consumer Group:</em> each partition assigned to one consumer in the group (enables parallel consumption). <em>Replication:</em> each partition replicated across brokers (leader + followers, ISR).</li>
+      <li><strong>Delivery Semantics:</strong> <em>At-most-once:</em> commit offset before processing (may lose messages). <em>At-least-once:</em> commit after processing (may duplicate). <em>Exactly-once (EOS):</em> transactional producer + idempotent consumer (Kafka Streams transactions, or consumer idempotency).</li>
+      <li><strong>Schema Evolution:</strong> Use <em>Avro</em> + <em>Schema Registry</em> for schema enforcement and backward/forward compatibility. Schema Registry ensures producers and consumers agree on format.</li>
+      <li><strong>Error Handling:</strong> <em>DLQ (Dead Letter Queue):</em> route failed messages to a separate topic for manual inspection. <em>Retry topic:</em> auto-retry with backoff before DLQ.</li>
+      <li><strong>Ordering:</strong> Guaranteed within a partition. Use <em>message key</em> to route related messages to the same partition (e.g., user_id as key ensures all events for a user are ordered).</li>
+      <li><strong>Kafka Connect &amp; Debezium CDC:</strong> Kafka Connect: framework for connecting Kafka to external systems (DB, S3, Elasticsearch). Debezium: CDC connectors that capture database changes (inserts/updates/deletes) as Kafka events in real-time.</li>
+      <li><strong>Consumer Lag:</strong> Difference between latest offset and consumer's committed offset. High lag means consumer is falling behind. Monitor with Burrow, Kafka Lag Exporter, or built-in consumer group commands.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How does Kafka achieve exactly-once semantics?</div>
+      <div class="qa-answer">Two components: (1) <em>Idempotent producer:</em> assigns sequence numbers to messages, broker deduplicates retries. (2) <em>Transactions:</em> producer atomically writes to multiple partitions and commits offsets. For end-to-end EOS in Kafka Streams, enable <code>processing.guarantee=exactly_once_v2</code>. For external systems, the consumer must be idempotent (use a deduplication table or idempotent writes).</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=uvb00oaa3k8" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Kafka Explained &mdash; ByteByteGo</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=R873BlNVUB4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Kafka Deep Dive &mdash; Confluent</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 17. ElasticSearch -->
+<div class="accordion" data-tags="db" data-keywords="elasticsearch inverted index analyzer tokenizer mappings query dsl bool match term shard deep pagination" id="section-17">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">17</span>
+    <span class="accordion-title">ElasticSearch</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">ElasticSearch is a distributed search and analytics engine built on Apache Lucene. It excels at full-text search, log analytics, and real-time data exploration.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Inverted Index:</strong> Maps each term to the list of documents containing it (like a book index). Enables fast full-text search. Each field can have its own inverted index.</li>
+      <li><strong>Analyzer:</strong> Tokenizer (splits text into terms) + token filters (lowercase, stemming, synonyms, stop words). Standard analyzer: lowercase + word tokenizer. Custom analyzers for domain-specific needs.</li>
+      <li><strong>Mappings:</strong> <em>Dynamic:</em> ES auto-detects types (convenient, sometimes wrong). <em>Explicit:</em> define types manually. <em>keyword:</em> exact match, aggregation, sorting (not analyzed). <em>text:</em> full-text search (analyzed, tokenized).</li>
+      <li><strong>Query DSL:</strong> <em>Query context:</em> "how well does this match?" (scoring). <em>Filter context:</em> "does this match? yes/no" (cacheable, no scoring). <em>match:</em> full-text. <em>term:</em> exact value. <em>bool:</em> combine with must/should/must_not/filter. <em>range:</em> numeric/date ranges.</li>
+      <li><strong>Performance:</strong> <em>Shard sizing:</em> 10-50GB per shard. Too many small shards: overhead. Too few large shards: slow queries. <em>Refresh interval:</em> how often new docs become searchable (default 1s, increase for write-heavy). <em>Deep pagination:</em> <code>from+size</code> is O(from+size) on each shard; use <code>search_after</code> for efficient deep pagination or <code>scroll</code> for batch exports.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why is the keyword type different from the text type?</div>
+      <div class="qa-answer"><code>text</code> fields are analyzed (tokenized, lowercased, stemmed) for full-text search &mdash; you cannot sort or aggregate on them efficiently. <code>keyword</code> fields are indexed as-is for exact matches, sorting, and aggregations. Common pattern: map a field as both (<code>multi-field</code>) with <code>title</code> as text and <code>title.keyword</code> as keyword.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=ZP0NmfyfsoM" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> ElasticSearch Explained &mdash; Hussein Nasser</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 18. Qdrant -->
+<div class="accordion" data-tags="db" data-keywords="qdrant vector database hnsw cosine dot product euclidean payload filtering embedding similarity search" id="section-18">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">18</span>
+    <span class="accordion-title">Qdrant (Vector DB)</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Qdrant is a vector similarity search engine for AI applications. It stores high-dimensional vectors with payloads and enables fast approximate nearest neighbor (ANN) search.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Collection:</strong> A named group of points with a defined vector size and distance metric.</li>
+      <li><strong>Point:</strong> A vector (embedding) + optional payload (metadata as JSON). The vector is the searchable content; the payload enables filtering.</li>
+      <li><strong>Distance Metrics:</strong> <em>Cosine:</em> angle between vectors (most common for text embeddings, direction-only). <em>Dot Product:</em> considers magnitude (useful when vector length is meaningful). <em>Euclidean:</em> straight-line distance (good for spatial data).</li>
+      <li><strong>HNSW Index:</strong> Hierarchical Navigable Small World graph. Builds a multi-layer graph for efficient ANN search. Configurable: <code>m</code> (connections per node, higher = more accurate, more memory), <code>ef_construct</code> (build-time search width).</li>
+      <li><strong>Filtered Vector Search:</strong> <em>Pre-filtering:</em> apply payload filter first, then search vectors in filtered subset (exact but may be slow if filter is very selective). <em>Post-filtering:</em> search vectors first, then filter results (fast but may return fewer results than requested). Qdrant uses smart hybrid approach.</li>
+      <li><strong>Payload Indexing:</strong> Create indexes on payload fields for fast filtering. Keyword index for exact match, integer/float index for range queries.</li>
+      <li><strong>Vector Search vs Full-Text:</strong> Vector search finds semantically similar content (captures meaning). Full-text search finds lexically matching content (exact terms). Best practice: hybrid search combining both (e.g., BM25 for candidates, vector reranking).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: When would you use vector search instead of full-text search?</div>
+      <div class="qa-answer">Vector search excels at semantic similarity (find documents about "automobile" when searching "car"), multilingual matching, image/audio similarity, and recommendation. Full-text search is better for exact keyword matching, boolean queries, and when users know the exact terms. Many production systems use hybrid: BM25 for candidate retrieval, vector similarity for reranking.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=klTvEwg3oJ4" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Vector Databases Explained &mdash; Fireship</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 30. DuckDB -->
+<div class="accordion" data-tags="db" data-keywords="duckdb olap columnar vectorized parquet pandas arrow in-process analytics" id="section-30">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">30</span>
+    <span class="accordion-title">DuckDB</span>
+    <span class="accordion-tag tag-db">Database</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">DuckDB is an in-process OLAP database (the "SQLite of analytics"). It runs inside your application process with zero external dependencies and excels at analytical queries on local data.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>In-Process OLAP:</strong> Runs embedded in your Python/Node/Java process. No server to manage. Perfect for analytics, ETL, data science pipelines.</li>
+      <li><strong>Columnar Storage:</strong> Stores data column-by-column (vs row-by-row in PostgreSQL). Enables efficient compression and fast analytical queries that scan few columns across many rows.</li>
+      <li><strong>Vectorized Execution:</strong> Processes data in batches (vectors of 2048 values) using SIMD instructions. Much faster than row-at-a-time execution for aggregations and scans.</li>
+      <li><strong>Zero-Copy Integration:</strong> Reads pandas DataFrames, Arrow tables, and Parquet files directly without copying data. <code>SELECT * FROM df</code> queries a pandas DataFrame in SQL.</li>
+      <li><strong>Parquet Native:</strong> Reads and writes Parquet files directly. Can query Parquet files on S3 without loading them fully into memory (predicate pushdown, column projection).</li>
+      <li><strong>When DuckDB vs PostgreSQL:</strong> DuckDB: analytics, OLAP, local data processing, single-user. PostgreSQL: OLTP, concurrent writes, multi-user, transactional workloads. DuckDB is 10-100x faster for analytical queries on local data.</li>
+      <li><strong>FactGet Usage:</strong> Used with Splink for entity resolution. DuckDB backend for blocking, comparison, and deduplication on large datasets without needing Spark.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why is DuckDB faster than PostgreSQL for analytics?</div>
+      <div class="qa-answer">Three reasons: (1) <em>Columnar storage</em> reads only needed columns (PostgreSQL reads full rows). (2) <em>Vectorized execution</em> processes batches with SIMD (PostgreSQL is row-at-a-time). (3) <em>No client-server overhead</em> &mdash; runs in-process, no network round trips. For a 100M-row aggregation, DuckDB can be 100x faster.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Z-6SnP6yzgo" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> DuckDB Explained &mdash; MotherDuck</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: Payments -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="pay">Payments</div>
+
+<!-- 19. Stripe & Paddle -->
+<div class="accordion" data-tags="pay" data-keywords="stripe paddle payment intent subscription invoice webhook idempotency merchant of record vat proration" id="section-19">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">19</span>
+    <span class="accordion-title">Stripe &amp; Paddle (Payments)</span>
+    <span class="accordion-tag tag-pay">Payments</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Payment integration requires careful handling of idempotency, webhooks, and edge cases. Stripe is the most popular payment platform; Paddle serves as a Merchant of Record.</p>
+
+    <h3 class="sub-heading">Stripe Core Objects</h3>
+    <ul class="concept-list">
+      <li><strong>Customer:</strong> Represents a payer. Stores payment methods, billing info.</li>
+      <li><strong>PaymentIntent:</strong> Represents a payment attempt. Tracks the lifecycle: created &rarr; requires_payment_method &rarr; requires_confirmation &rarr; processing &rarr; succeeded/failed.</li>
+      <li><strong>SetupIntent:</strong> Save a payment method without charging (for future use). Handles 3DS authentication.</li>
+      <li><strong>Subscription:</strong> Recurring billing. Linked to a Price (amount + interval). States: active, past_due, canceled, unpaid.</li>
+      <li><strong>Invoice:</strong> Generated for subscriptions. Contains line items, tax, discounts.</li>
+      <li><strong>Webhook:</strong> Stripe sends events (e.g., <code>invoice.paid</code>, <code>customer.subscription.deleted</code>) to your endpoint.</li>
+    </ul>
+
+    <h3 class="sub-heading">Critical Patterns</h3>
+    <ul class="concept-list">
+      <li><strong>Idempotency Keys:</strong> Pass <code>Idempotency-Key</code> header with a unique value (UUID). Stripe returns the same response for duplicate requests. Essential for retries and network failures.</li>
+      <li><strong>Webhook Signature Verification:</strong> Always verify <code>stripe-signature</code> header using your webhook signing secret. Prevents spoofed events. Use the Stripe SDK's <code>constructEvent</code> method.</li>
+      <li><strong>Event Ordering:</strong> Webhooks may arrive out of order. Always fetch the latest object state from the API after receiving a webhook rather than trusting the event payload alone.</li>
+      <li><strong>Proration:</strong> When changing plans mid-cycle, Stripe calculates the credit for unused time and charges the difference. Configure proration behavior (create_prorations, none, always_invoice).</li>
+    </ul>
+
+    <h3 class="sub-heading">Paddle &amp; Dual-Provider</h3>
+    <ul class="concept-list">
+      <li><strong>Paddle as Merchant of Record:</strong> Paddle handles sales tax, VAT, and compliance globally. You receive net payments. Simpler for international sales but less control over the checkout experience.</li>
+      <li><strong>Dual-Provider Architecture:</strong> Use Stripe for B2B (custom invoicing, ACH, better margins) and Paddle for B2C international (VAT handling, MoR simplicity). Route based on customer type at checkout.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why must you verify webhook signatures?</div>
+      <div class="qa-answer">Without verification, anyone who discovers your webhook URL can send fake events (e.g., fake <code>checkout.session.completed</code> to grant free access). The signature proves the event came from Stripe using HMAC-SHA256 with your webhook secret. Always verify before processing.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=1XKRxeo9414" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Stripe API Explained &mdash; Traversy Media</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- ========================================== -->
+<!-- CATEGORY: AI & ML -->
+<!-- ========================================== -->
+<div class="category-label" data-cat="ai">AI &amp; Agentic Systems</div>
+
+<!-- 25. LangGraph & Agentic Systems -->
+<div class="accordion" data-tags="ai" data-keywords="langgraph stategraph agent checkpointing persistence subgraphs conditional edges memory" id="section-25">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">25</span>
+    <span class="accordion-title">LangGraph &amp; Agentic Systems</span>
+    <span class="accordion-tag tag-ai">AI</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">LangGraph is a framework for building stateful, multi-step AI agent workflows as directed graphs. Understanding its state management and persistence model is key for production agentic systems.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>StateGraph:</strong> Define a TypedDict (or Pydantic model) for state. Add <em>nodes</em> (functions that take state, return partial state updates). Add <em>edges</em> (transitions between nodes). <em>Conditional edges</em> route based on state values (if/else logic in the graph).</li>
+      <li><strong>Checkpointing &amp; Persistence:</strong> Save graph state at each step. <code>MemorySaver</code> for development (in-memory). <code>PostgresSaver</code> / <code>SqliteSaver</code> for production. Enables: resume after failure, time-travel debugging, human-in-the-loop interrupts.</li>
+      <li><strong>Resume After Failure:</strong> If a node fails (API error, timeout), the graph state is checkpointed at the last successful node. On retry, execution resumes from the failure point, not from scratch.</li>
+      <li><strong>Subgraphs:</strong> Compose graphs hierarchically. A node in one graph can be another complete graph. Enables modular agent design (research subgraph, writing subgraph, review subgraph).</li>
+      <li><strong>FactGet Architecture:</strong> Specialized agents (claim analyzer, source validator, evidence ranker) as nodes. Parallel claim analysis using <code>map-reduce</code> pattern. Memory compression for long-running conversations. Token/cost tracking per node for budget management.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why use LangGraph instead of a simple chain?</div>
+      <div class="qa-answer">Chains are linear (A &rarr; B &rarr; C). LangGraph supports: (1) <em>Cycles</em> &mdash; agent loops (think, act, observe, repeat). (2) <em>Conditional routing</em> &mdash; different paths based on results. (3) <em>Persistence</em> &mdash; pause, resume, human approval. (4) <em>Parallel execution</em> &mdash; fan-out to multiple nodes. Use chains for simple pipelines; LangGraph for stateful, branching, or looping workflows.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=v9fkbTxPzs0" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> LangGraph Tutorial &mdash; LangChain Official</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=sal78ACtGTc" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Building AI Agents &mdash; AI Jason</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 26. ReAct Agents & Tool Calling -->
+<div class="accordion" data-tags="ai" data-keywords="react agent tool calling function calling json schema thought action observation loop reflexion multi-agent" id="section-26">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">26</span>
+    <span class="accordion-title">ReAct Agents &amp; Tool Calling</span>
+    <span class="accordion-tag tag-ai">AI</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">ReAct (Reasoning + Acting) is the foundational pattern for AI agents. Tool calling gives LLMs the ability to interact with external systems through structured function calls.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>ReAct Pattern:</strong> The LLM follows a loop: <em>Thought</em> (reason about the task) &rarr; <em>Action</em> (call a tool) &rarr; <em>Observation</em> (receive tool result) &rarr; repeat until the answer is found. This interleaves reasoning with external data retrieval.</li>
+      <li><strong>Agent Architectures:</strong> <em>ReAct:</em> simple loop, good for straightforward tasks. <em>Plan-and-Execute:</em> plan all steps first, then execute (better for complex multi-step tasks). <em>Reflexion:</em> adds self-reflection on failures to improve future attempts. <em>Multi-agent:</em> specialized agents collaborate (supervisor, researcher, coder).</li>
+      <li><strong>Tool Calling:</strong> Define tools as JSON schemas with name, description, and parameters. The LLM decides when to call a tool and with what arguments. The runtime executes the tool and feeds the result back.</li>
+      <li><strong>Tool Choice Modes:</strong> <em>auto:</em> LLM decides (default). <em>required:</em> must call a tool. <em>specific tool:</em> must call a named tool. <em>none:</em> no tool calls allowed.</li>
+      <li><strong>Parallel Tool Calls:</strong> Some LLMs can request multiple tool calls in one turn. Execute them concurrently for faster results.</li>
+      <li><strong>Designing Good Tools:</strong> Single responsibility. Clear, concise descriptions (the LLM reads them). Bounded output (return summaries, not raw dumps). Structured error responses. Avoid tools with overlapping capabilities.</li>
+      <li><strong>Infinite Loop Prevention:</strong> Set a max iteration count. Track tool call history to detect repetition. Use a "final answer" tool to force termination. Implement timeout budgets.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you prevent an AI agent from getting stuck in an infinite loop?</div>
+      <div class="qa-answer">Multiple safeguards: (1) <em>Max iterations</em> (hard stop after N steps). (2) <em>Cycle detection</em> (if the same tool is called with the same args consecutively, intervene). (3) <em>Token/cost budget</em> (stop when budget is exhausted). (4) <em>Timeout</em> (wall-clock limit). (5) <em>Reflection prompt</em> ("You have been running for N steps. Summarize progress and decide if you should stop.").</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Eug2clsLtFs" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> ReAct Agents Explained &mdash; AI Explained</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=aqdWSYWC_LI" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Function Calling &mdash; OpenAI Official</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 27. Human-in-the-Loop Workflows -->
+<div class="accordion" data-tags="ai" data-keywords="human in the loop hitl approval gate interrupt chat refinement escalation optimistic concurrency audit trail" id="section-27">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">27</span>
+    <span class="accordion-title">Human-in-the-Loop Workflows</span>
+    <span class="accordion-tag tag-ai">AI</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Human-in-the-loop (HITL) patterns keep humans in control of critical AI decisions. Essential for applications where AI accuracy is not 100% and mistakes have consequences.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Why HITL:</strong> AI is not always right. High-stakes decisions (financial, legal, medical, content publishing) need human oversight. HITL also builds trust and improves AI over time via feedback.</li>
+      <li><strong>Patterns:</strong>
+        <em>Approval Gate:</em> LangGraph's <code>interrupt_before</code>/<code>interrupt_after</code> pauses execution at a node, shows proposed action to human, continues on approval.
+        <em>Chat Refinement:</em> AI generates draft, human iterates via conversation until satisfied.
+        <em>Escalation:</em> AI handles routine cases, escalates uncertain/complex cases to human queue.
+      </li>
+      <li><strong>FactGet Implementation:</strong> Staged edits (AI proposes changes, human reviews diff). Chat refinement (human asks AI to adjust specific claims). Audit trail (every AI decision + human override recorded with timestamp and rationale).</li>
+      <li><strong>Optimistic Concurrency for AI+Human Editing:</strong> When both AI and humans can edit the same resource: use version numbers. AI reads version N, proposes edit. If human edited to version N+1 in the meantime, AI's edit is rejected (conflict). AI must re-read and re-propose. Prevents AI from overwriting human changes.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: How do you implement an approval gate in a LangGraph agent?</div>
+      <div class="qa-answer">Use <code>interrupt_before=["action_node"]</code> when compiling the graph. When execution reaches that node, it checkpoints the state and pauses. Your application presents the pending action to the human. On approval, call <code>graph.invoke(None, config)</code> to resume. On rejection, modify the state and resume, or end the graph.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=9BPCV5TYPmg" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Human in the Loop AI &mdash; LangChain</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 29. LiteLLM -->
+<div class="accordion" data-tags="ai" data-keywords="litellm multi model routing fallback token counting cost tracking rate limiting caching unified sdk" id="section-29">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">29</span>
+    <span class="accordion-title">LiteLLM &amp; Multi-Model Routing</span>
+    <span class="accordion-tag tag-ai">AI</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">LiteLLM provides a unified SDK for 100+ LLM providers (OpenAI, Anthropic, Gemini, Bedrock, etc.) with a single API interface. Essential for multi-model architectures.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Unified SDK:</strong> <code>litellm.completion("gpt-4", messages)</code> works the same as <code>litellm.completion("claude-3-opus", messages)</code>. Translates between provider-specific APIs automatically.</li>
+      <li><strong>Fallbacks:</strong> Configure fallback chains: try GPT-4 &rarr; on failure, try Claude 3 &rarr; on failure, try Gemini. Handles rate limits, outages, and errors transparently.</li>
+      <li><strong>Token Counting:</strong> Accurate token counting per model family (different tokenizers for GPT vs Claude). Enables pre-flight checks ("will this request exceed the context window?").</li>
+      <li><strong>Cost Tracking:</strong> Track per-request cost by model. Set budgets per user, team, or project. Alert when approaching limits.</li>
+      <li><strong>Rate Limiting:</strong> Built-in rate limiting per model, per API key. Handles provider rate limits gracefully with retry and backoff.</li>
+      <li><strong>Caching:</strong> Cache identical requests to avoid redundant API calls. Supports in-memory, Redis, and S3 caching backends.</li>
+      <li><strong>FactGet Usage:</strong> Model selection per task (fast model for classification, powerful model for analysis). Cost budgets per pipeline run. Fallback chains for reliability during high-traffic claim analysis.</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why use a multi-model routing layer instead of a single LLM provider?</div>
+      <div class="qa-answer">Resilience (fallbacks on outages), cost optimization (cheaper model for simple tasks, expensive for complex), latency optimization (fastest provider per region), avoiding vendor lock-in, and leveraging each model's strengths (GPT-4 for code, Claude for analysis, Gemini for long context).</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Bxf6Z5mnBbA" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> LiteLLM Overview &mdash; BerriAI Official</a>
+    </div>
+  </div></div>
+</div>
+
+<!-- 31. Entity Resolution -->
+<div class="accordion" data-tags="ai" data-keywords="entity resolution splink bm25 record linkage blocking comparison levels em training match probability sanctions screening" id="section-31">
+  <button class="accordion-header" aria-expanded="false">
+    <span class="section-number">31</span>
+    <span class="accordion-title">Entity Resolution (Splink &amp; BM25)</span>
+    <span class="accordion-tag tag-ai">AI</span>
+    <span class="accordion-chevron">&#9660;</span>
+  </button>
+  <div class="accordion-body"><div class="accordion-content">
+    <p class="section-intro">Entity resolution (record linkage / deduplication) determines which records across datasets refer to the same real-world entity. Critical for data quality, compliance, and sanctions screening.</p>
+
+    <h3 class="sub-heading">Core Concepts</h3>
+    <ul class="concept-list">
+      <li><strong>Record Linkage Problem:</strong> Given records from multiple sources without a shared unique ID, find which records refer to the same entity. Challenges: name variations, typos, missing fields, different formats.</li>
+      <li><strong>Splink:</strong> Open-source Python library for probabilistic record linkage.
+        <em>Blocking:</em> reduce comparison space (instead of N x M, compare only records that share a blocking key like first letter of name + birth year).
+        <em>Comparison Levels:</em> for each field, define levels of similarity (exact match, fuzzy match, partial match) with associated match weights.
+        <em>EM Training:</em> Expectation-Maximization algorithm estimates match/non-match probabilities without labeled training data.
+        <em>Match Probability:</em> Fellegi-Sunter model produces a probability that two records are the same entity.</li>
+      <li><strong>Sanctions Screening:</strong> Match customer records against sanctions lists (OFAC, EU, UN). Challenges: multilingual name matching (transliteration), exact identifier matching (passport, DOB), high recall requirement (must not miss true matches). Use BM25 for candidate retrieval, then Splink for detailed comparison.</li>
+      <li><strong>BM25 Formula:</strong> Best Matching 25, a ranking function for information retrieval.
+        <em>TF:</em> term frequency in the document (saturates with k1 parameter).
+        <em>IDF:</em> inverse document frequency (rarer terms score higher).
+        <em>Length normalization:</em> controlled by parameter b (0 = no normalization, 1 = full normalization).
+        <em>Parameters:</em> k1 (typically 1.2-2.0, controls TF saturation), b (typically 0.75, controls length normalization).</li>
+      <li><strong>BM25 vs Vector Search:</strong> BM25: exact lexical matching, no training needed, interpretable scores, great for names and identifiers. Vector search: semantic similarity, handles synonyms, needs embeddings. For entity resolution: BM25 is often better for name matching; combine both for robust candidate retrieval.</li>
+      <li><strong>Operational Patterns:</strong> Idempotent ingestion (re-processing same list should not create duplicates). Source freshness tracking (detect stale sanctions lists). Delisting safety gates (require explicit confirmation before removing a match). Audit trail (every match decision logged with rationale).</li>
+    </ul>
+
+    <h3 class="sub-heading">Key Interview Q&amp;A</h3>
+    <div class="qa-block">
+      <div class="qa-question">Q: Why use blocking in entity resolution instead of comparing all pairs?</div>
+      <div class="qa-answer">Without blocking, comparing N records requires N*(N-1)/2 comparisons. For 1M records, that is ~500 billion comparisons &mdash; computationally infeasible. Blocking partitions records into groups that share a blocking key (e.g., first 3 letters of surname + birth year). Only records within the same block are compared. This reduces comparisons by 99%+ while missing very few true matches (if blocking keys are well-chosen).</div>
+    </div>
+    <div class="qa-block">
+      <div class="qa-question">Q: Explain BM25's k1 and b parameters.</div>
+      <div class="qa-answer"><code>k1</code> controls term frequency saturation. Low k1 (0.5): even one occurrence scores high. High k1 (2.0): more occurrences continue to increase score. <code>b</code> controls document length normalization. b=0: no length normalization (long and short documents treated equally). b=1: fully normalize (long documents penalized). Typical values: k1=1.2, b=0.75.</div>
+    </div>
+
+    <div class="yt-section">
+      <h4>YouTube Resources</h4>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=8BHmLkdsmEo" target="_blank" rel="noopener"><span class="yt-icon">&#9654;&#65039;</span> Record Linkage Explained &mdash; Robin Linacre (Splink creator)</a>
+    </div>
+  </div></div>
+</div>
+
+</main>
+
+<!-- ===== BACK TO TOP ===== -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== Theme Toggle =====
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  try { const savedTheme = localStorage.getItem('interview-prep-theme'); if (savedTheme) root.setAttribute('data-theme', savedTheme); } catch(e) {}
+  function updateThemeIcon() {
+    themeToggle.innerHTML = root.getAttribute('data-theme') === 'light' ? '&#9728;' : '&#9790;';
+  }
+  updateThemeIcon();
+  themeToggle.addEventListener('click', function() {
+    const current = root.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('interview-prep-theme', next); } catch(e) {}
+    updateThemeIcon();
+  });
+
+  // ===== Accordion =====
+  const accordions = document.querySelectorAll('.accordion');
+  accordions.forEach(function(acc) {
+    const header = acc.querySelector('.accordion-header');
+    header.addEventListener('click', function() {
+      const isOpen = acc.classList.contains('open');
+      acc.classList.toggle('open');
+      header.setAttribute('aria-expanded', !isOpen);
+    });
+  });
+
+  // ===== Table of Contents =====
+  const tocToggle = document.getElementById('tocToggle');
+  const tocGrid = document.getElementById('tocGrid');
+  tocToggle.addEventListener('click', function() {
+    tocToggle.classList.toggle('open');
+    tocGrid.classList.toggle('open');
+  });
+  // Populate TOC
+  accordions.forEach(function(acc) {
+    const num = acc.querySelector('.section-number').textContent;
+    const title = acc.querySelector('.accordion-title').textContent;
+    const id = acc.id;
+    const link = document.createElement('a');
+    link.className = 'toc-link';
+    link.href = '#' + id;
+    link.innerHTML = '<span class="toc-num">' + num + '</span>' + title;
+    link.addEventListener('click', function() {
+      tocToggle.classList.remove('open');
+      tocGrid.classList.remove('open');
+    });
+    tocGrid.appendChild(link);
+  });
+
+  // ===== Search =====
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  const noResults = document.getElementById('noResults');
+  const categories = document.querySelectorAll('.category-label');
+
+  searchInput.addEventListener('input', function() {
+    const query = searchInput.value.toLowerCase().trim();
+    searchClear.classList.toggle('visible', query.length > 0);
+    let visibleCount = 0;
+    accordions.forEach(function(acc) {
+      const title = acc.querySelector('.accordion-title').textContent.toLowerCase();
+      const keywords = (acc.getAttribute('data-keywords') || '').toLowerCase();
+      const content = acc.querySelector('.accordion-content') ?
+        acc.querySelector('.accordion-content').textContent.toLowerCase() : '';
+      const match = !query || title.includes(query) || keywords.includes(query) || content.includes(query);
+      acc.classList.toggle('hidden-by-search', !match);
+      if (match) visibleCount++;
+    });
+    noResults.classList.toggle('visible', visibleCount === 0 && query.length > 0);
+    updateCategoryVisibility();
+    document.getElementById('navStats').textContent = query ? visibleCount + ' of 31 topics' : '31 topics';
+  });
+
+  searchClear.addEventListener('click', function() {
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input'));
+    searchInput.focus();
+  });
+
+  function updateCategoryVisibility() {
+    categories.forEach(function(cat) {
+      const catType = cat.getAttribute('data-cat');
+      let next = cat.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('category-label')) {
+        if (next.classList.contains('accordion') && !next.classList.contains('hidden-by-search')) {
+          hasVisible = true;
+        }
+        next = next.nextElementSibling;
+      }
+      cat.style.display = hasVisible ? '' : 'none';
+    });
+  }
+
+  // ===== Filter Toolbar =====
+  const toolbarBtns = document.querySelectorAll('.toolbar-btn');
+  toolbarBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      toolbarBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      searchInput.value = '';
+      searchClear.classList.remove('visible');
+      let visibleCount = 0;
+      accordions.forEach(function(acc) {
+        const tags = acc.getAttribute('data-tags') || '';
+        const match = filter === 'all' || tags.includes(filter);
+        acc.classList.toggle('hidden-by-search', !match);
+        if (match) visibleCount++;
+      });
+      noResults.classList.toggle('visible', visibleCount === 0);
+      updateCategoryVisibility();
+      document.getElementById('navStats').textContent = filter === 'all' ? '31 topics' : visibleCount + ' of 31 topics';
+    });
+  });
+  // Set "All" as initially active
+  document.querySelector('.toolbar-btn[data-filter="all"]').classList.add('active');
+
+  // ===== Progress Bar =====
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', function() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = Math.min(progress, 100) + '%';
+  });
+
+  // ===== Back to Top =====
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    backToTop.classList.toggle('visible', window.scrollY > 400);
+  });
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== Keyboard Shortcut =====
+  document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + K to focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+    // Escape to clear search
+    if (e.key === 'Escape' && document.activeElement === searchInput) {
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input'));
+      searchInput.blur();
+    }
+  });
+})();
+</script>
+</body>
+</html>
