@@ -1,0 +1,107 @@
+/* Inherit the interview guide's palette, type, widths and theme. */
+[hidden] { display: none !important; }
+.study-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 24px auto 0;
+}
+.study-tabs button {
+  padding: 10px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font: 600 14px var(--font-sans);
+  cursor: pointer;
+}
+.study-tabs [aria-selected="true"] {
+  border-color: var(--accent-blue);
+  background: var(--accent-blue-dim);
+  color: var(--accent-blue);
+}
+.dsa { --dsa-muted: var(--text-secondary); }
+.dsa-heading { margin: 32px 0 20px; }
+.dsa-heading h2 { font-size: clamp(22px, 4vw, 28px); line-height: 1.3; margin-bottom: 8px; }
+.dsa-heading p { max-width: 68ch; color: var(--dsa-muted); font-size: 14px; }
+.dsa-progress-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.dsa-progress-row label { font-size: 13px; font-variant-numeric: tabular-nums; }
+.dsa progress { width: 110px; height: 7px; accent-color: var(--accent-blue); }
+.dsa-button, .dsa-weeks button, .dsa-days button {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font: 500 13px var(--font-sans);
+  cursor: pointer;
+  padding: 9px 12px;
+  min-height: 40px;
+}
+.dsa-button:hover:not(:disabled), .dsa-weeks button:hover, .dsa-days button:hover { border-color: var(--accent-blue); }
+.dsa button:disabled { opacity: .55; cursor: default; }
+.dsa-save-status, .dsa-footer, .dsa-muted { color: var(--dsa-muted); font-size: 12px; }
+.dsa-save-status { margin-top: 8px; min-height: 21px; }
+.dsa-weeks { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 24px 0; }
+.dsa-weeks button { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.dsa-weeks button span { color: var(--dsa-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.dsa [aria-current] { background: var(--accent-blue-dim); border-color: var(--accent-blue); color: var(--accent-blue); }
+.dsa-week-heading { font-size: 15px; margin-bottom: 12px; }
+.dsa-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 16px; }
+.dsa-days button { padding: 8px 4px; }
+.dsa-drill { border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-card); padding: 24px; }
+.dsa-drill-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.dsa-position { font-size: 12px; color: var(--dsa-muted); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.dsa-drill h3 { font-size: 21px; line-height: 1.35; }
+.dsa-complete { display: flex; align-items: center; gap: 8px; font-size: 13px; flex-shrink: 0; min-height: 36px; cursor: pointer; }
+.dsa-complete input { width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer; }
+.dsa-focus { font-size: 14px; margin-top: 16px; color: var(--dsa-muted); }
+.dsa-problems { list-style: none; padding: 0; margin: 24px 0 0; }
+.dsa-problems > li { border-top: 1px solid var(--border-subtle); padding: 20px 0; }
+.dsa-problems > li:last-child { padding-bottom: 0; }
+.dsa-problem-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.dsa-problem-heading h4 { font-size: 16px; font-weight: 600; line-height: 1.5; }
+.dsa-pass { flex-shrink: 0; font-size: 11px; color: var(--dsa-muted); }
+.dsa-revision { color: var(--accent-blue); }
+.dsa-taxonomy { font-size: 12px; color: var(--accent-blue); margin: 6px 0; }
+.dsa-taxonomy span { padding: 0 3px; }
+.dsa-hint { font-size: 13px; color: var(--dsa-muted); max-width: 72ch; }
+.dsa-hint strong { font-weight: 500; color: var(--text-primary); }
+.dsa-reminder { margin-top: 20px; padding: 16px 0 0; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--dsa-muted); }
+.dsa-reminder h4 { font-size: 14px; color: var(--text-primary); }
+.dsa-reminder p + p { margin-top: 8px; }
+.dsa-day-actions { display: flex; justify-content: space-between; gap: 12px; margin: 16px 0 28px; }
+.dsa-reference { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); }
+.dsa-reference > summary { cursor: pointer; padding: 16px 20px; font-size: 14px; font-weight: 600; }
+.dsa-reference > summary span { color: var(--dsa-muted); font-size: 12px; font-weight: 400; margin-left: 8px; }
+.dsa-reference-intro { padding: 0 20px 16px; color: var(--dsa-muted); font-size: 13px; }
+.dsa-table-scroll { overflow-x: auto; max-height: 600px; }
+.dsa table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.dsa th, .dsa td { padding: 12px 16px; vertical-align: top; border-top: 1px solid var(--border-subtle); }
+.dsa thead th { position: sticky; top: 0; background: var(--bg-secondary); z-index: 1; }
+.dsa tbody th { min-width: 170px; width: 29%; font-weight: 500; }
+.dsa tbody td:first-child { width: 16%; }
+.dsa tbody td:last-child { min-width: 230px; }
+.dsa tbody th span { display: block; font-weight: 400; color: var(--accent-blue); margin-top: 4px; }
+.dsa .dsa-future { color: var(--dsa-muted); font-size: 11px; }
+.dsa-examples { margin-top: 8px; color: var(--dsa-muted); }
+.dsa-examples summary { cursor: pointer; color: var(--accent-blue); }
+.dsa-examples ul { padding-left: 16px; margin-top: 8px; }
+.dsa-footer { margin-top: 24px; }
+.dsa-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.dsa :focus-visible, .study-tabs :focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 3px; }
+.dsa ::selection { background: var(--accent-blue-dim); }
+@media (max-width: 640px) {
+  .dsa-heading { margin-top: 24px; }
+  .dsa-weeks { gap: 6px; }
+  .dsa-weeks button { flex-direction: column; padding: 8px 4px; }
+  .dsa-days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .dsa-drill { padding: 18px 16px; }
+  .dsa-drill-heading { flex-direction: column; gap: 8px; }
+  .dsa-drill h3 { font-size: 19px; }
+  .dsa-problem-heading { flex-wrap: wrap; gap: 4px 12px; }
+  .dsa-reference > summary span { display: block; margin-left: 0; }
+}
+@media print {
+  .study-tabs, .dsa-weeks, .dsa-days, .dsa-day-actions, .dsa-reference, .dsa-save-status, .dsa-progress-row { display: none !important; }
+  .dsa-drill { background: white; color: black; }
+}

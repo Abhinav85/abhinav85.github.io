@@ -444,6 +444,7 @@ tr:hover td { background: var(--bg-card-hover); }
 .no-results.visible { display: block; }
 .no-results .nr-icon { font-size: 40px; margin-bottom: 12px; }
 </style>
+<link rel="stylesheet" href="assets/dsa/schedule.css">
 </head>
 <body>
 
@@ -463,12 +464,17 @@ tr:hover td { background: var(--bg-card-hover); }
 <!-- ===== HERO ===== -->
 <header class="hero">
   <h1>Backend Engineer Interview Prep</h1>
-  <p class="subtitle">A comprehensive guide covering 31 essential topics for backend engineering interviews, from system design to AI agents.</p>
-  <div class="hero-meta">
+  <p class="subtitle" id="guideSummary">A comprehensive guide covering 31 essential topics for backend engineering interviews, from system design to AI agents.</p>
+  <div class="hero-meta" id="guideMeta">
     <span>&#128218; 31 Topics</span>
     <span>&#9201; ~8 hour study</span>
     <span>&#127919; 100+ Q&amp;As</span>
   </div>
+  <div class="study-tabs" role="tablist" aria-label="Study area" id="studyTabs" hidden>
+    <button type="button" role="tab" id="guideTab" aria-controls="mainContent" aria-selected="true">Interview Guide</button>
+    <button type="button" role="tab" id="dsaTab" aria-controls="dsaPanel" aria-selected="false" tabindex="-1">DSA Schedule</button>
+  </div>
+  <div id="guideTools">
   <br>
   <div class="search-container">
     <span class="search-icon">&#128269;</span>
@@ -485,10 +491,11 @@ tr:hover td { background: var(--bg-card-hover); }
     <button class="toolbar-btn" data-filter="ai">AI/ML</button>
     <button class="toolbar-btn" data-filter="pay">Payments</button>
   </div>
+  </div>
 </header>
 
 <!-- ===== TABLE OF CONTENTS ===== -->
-<div class="toc-wrapper">
+<div class="toc-wrapper" id="guideToc">
   <button class="toc-toggle" id="tocToggle">
     <span>&#128203; Table of Contents</span>
     <span class="chevron">&#9660;</span>
@@ -497,7 +504,7 @@ tr:hover td { background: var(--bg-card-hover); }
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main class="content" id="mainContent">
+<main class="content" id="mainContent" role="tabpanel" aria-labelledby="guideTab">
 
   <div class="no-results" id="noResults">
     <div class="nr-icon">&#128301;</div>
@@ -1774,6 +1781,34 @@ CMD ["node", "dist/index.js"]</pre>
 
 </main>
 
+<!-- ===== DSA LEARNING SCHEDULE ===== -->
+<section class="content dsa" id="dsaPanel" role="tabpanel" aria-labelledby="dsaTab" hidden>
+  <div class="dsa-heading">
+    <h2>DSA — Patterns &amp; Intuition</h2>
+    <p>70 days of deliberate practice. Use the schedule to choose your questions; solve, discuss and take notes in ChatGPT.</p>
+  </div>
+  <div class="dsa-progress-row">
+    <label for="dsaProgress" id="dsaProgressLabel">0 of 70 days complete · 0%</label>
+    <progress id="dsaProgress" max="70" value="0"></progress>
+    <button type="button" class="dsa-button" id="dsaResume">Go to next incomplete day</button>
+  </div>
+  <p class="dsa-save-status" id="dsaSaveStatus" role="status">Completion is saved in this browser.</p>
+  <nav class="dsa-weeks" id="dsaWeeks" aria-label="DSA weeks"></nav>
+  <h3 class="dsa-week-heading" id="dsaWeekTitle"></h3>
+  <nav class="dsa-days" id="dsaDays" aria-label="Days in the selected week"></nav>
+  <article class="dsa-drill" id="dsaDrill" aria-labelledby="dsaDayTitle"></article>
+  <div class="dsa-day-actions">
+    <button type="button" class="dsa-button" id="dsaPrevious">Previous day</button>
+    <button type="button" class="dsa-button" id="dsaNext">Next day</button>
+  </div>
+  <details class="dsa-reference" id="dsaReference">
+    <summary>Pattern reference <span>Recognition signals, by family</span></summary>
+    <div id="dsaReferenceContent"></div>
+  </details>
+  <p class="dsa-muted" id="dsaBlindReference" hidden>The pattern reference is tucked away during Week 10 to keep your daily revision blind.</p>
+  <p class="dsa-footer">Repeated questions are intentional. Completion records a study day, not mastery. No solutions or notes are stored here.</p>
+</section>
+
 <!-- ===== BACK TO TOP ===== -->
 <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
 
@@ -1921,7 +1956,7 @@ CMD ["node", "dist/index.js"]</pre>
   // ===== Keyboard Shortcut =====
   document.addEventListener('keydown', function(e) {
     // Ctrl/Cmd + K to focus search
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k' && !document.getElementById('mainContent').hidden) {
       e.preventDefault();
       searchInput.focus();
       searchInput.select();
@@ -1935,5 +1970,6 @@ CMD ["node", "dist/index.js"]</pre>
   });
 })();
 </script>
+<script type="module" src="assets/dsa/schedule.mjs"></script>
 </body>
 </html>
